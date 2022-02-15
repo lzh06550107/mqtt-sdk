@@ -92,7 +92,7 @@ class ParamSettingAction
     /**
      * 设备信息获取
      */
-    public const DEVICE_INFO = "deviceInfoRequest";
+    public const GET_DEVICE_INFO = "deviceInfoRequest";
 
     /**
      * 设备信息设置

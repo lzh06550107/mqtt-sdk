@@ -164,8 +164,8 @@ abstract class AbstractMqttClient extends ClientConfig
 
                         $message = json_decode($resp['message'], true); // 对消息体进行json解码
 
-                        // 请求返回错误码
-                        if (isset($message['ret']) && $message['ret'] != 0) {
+                        // 请求返回错误码，返回1表示设备重启；2表示升级开始，1表示升级成功
+                        if (isset($message['ret']) && $message['ret'] != 0 && $message['ret'] != 1 && $message['ret'] != 2) {
                             throw $this->errorCodeConvertToException($message);
                         }
 
@@ -317,6 +317,9 @@ abstract class AbstractMqttClient extends ClientConfig
     protected function parseResponse($resp) : ?AbstractResponse
     {
         $respClass = "JuLongDeviceMqtt"."\\".ucfirst($this->service)."\\"."Models"."\\".ucfirst($resp['Action'])."Response";
+        if (!class_exists($respClass)) {
+            $respClass = "JuLongDeviceMqtt"."\\".ucfirst($this->service)."\\"."Models"."\\".ucfirst($resp['Action']);
+        }
         $obj = new $respClass();
         $obj->deserialize($resp);
         return $obj;

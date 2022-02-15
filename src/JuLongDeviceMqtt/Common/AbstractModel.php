@@ -31,6 +31,7 @@ abstract class AbstractModel
      * @since 2021/12/23
      */
     private function objSerialize($obj) {
+
         $memberRet = [];
 
         foreach ($obj as $property => $value)
@@ -160,19 +161,32 @@ abstract class AbstractModel
      * 复制一个对象的所有属性到另一个对象
      * @param $fromObj
      * @param $toObj
+     * @param $level int 复制层级，0表示不限制，其它正整数表示控制层级
      * @author LZH
      * @since 2022/02/09
      */
-    function copyProperties($fromObj, &$toObj)
+    function copyProperties($fromObj, &$toObj, $level = 0)
     {
-        foreach ($fromObj as $key => $value) {
-
-            if (is_object($value)) {
-                static::copyProperties($value, $toObj);
-            } else {
-                $toObj->$key = $value;
+        static $count = 1;
+        if ( $level != 0 && $count++ > $level ) { // 超过次数，则结束迭代
+            // 剩下的属性都复制到目标对象
+            foreach ($fromObj as $key1 => $value1) {
+                if (!empty($value1)) {
+                    $toObj->$key1 = $value1;
+                }
             }
+        } else {
+            foreach ($fromObj as $key => $value) {
 
+                if (is_object($value)) {
+                    $toObj->$key = new class extends AbstractModel{}; // 匿名类
+                    static::copyProperties($value, $toObj->$key);
+                } else {
+                    $toObj->$key = $value;
+                }
+
+            }
         }
+
     }
 }

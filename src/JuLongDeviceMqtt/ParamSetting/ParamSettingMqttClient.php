@@ -10,6 +10,7 @@ namespace JuLongDeviceMqtt\ParamSetting;
 use JuLongDeviceMqtt\AckTopic;
 use JuLongDeviceMqtt\Common\AbstractMqttClient;
 use JuLongDeviceMqtt\Common\AbstractRequest;
+use JuLongDeviceMqtt\Common\AbstractResponse;
 
 /**
  * 设备配置客户端

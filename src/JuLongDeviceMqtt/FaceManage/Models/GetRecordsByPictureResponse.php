@@ -42,5 +42,44 @@ class GetRecordsByPictureResponse extends AbstractResponse
      */
     public $Records;
 
+    public function deserialize($param) {
+
+        parent::deserialize($param);
+
+        if ($param === null) {
+            return;
+        }
+
+        if (isset($param["ChannelNo"])) {
+            $this->ChannelNo = $param["ChannelNo"];
+        }
+
+        if (isset($param['Total'])) {
+            $this->Total = $param['Total'];
+        }
+
+        if (isset($param['PageTotalNO'])) {
+            $this->PageTotalNO = $param['PageTotalNO'];
+        }
+
+        if (isset($param['PageCurNO'])) {
+            $this->PageCurNO = $param['PageCurNO'];
+        }
+
+        if (isset($param['NameCount'])) {
+            $this->NameCount = $param['NameCount'];
+        }
+
+        if (isset($param['Records'])) {
+            $records = [];
+            foreach ($param['Records'] as $record) {
+                $recordObj = new Record();
+                $recordObj->deserialize($record);
+                $records[] = $recordObj;
+            }
+            $this->Records = $records;
+        }
+
+    }
 
 }
