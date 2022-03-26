@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * Wrapper for another logger. Drops logged messages if no logger is available.
- *
- * @package JuLongDeviceMqtt\Common
+ * 日志接口的装饰器
+ * Created on 2022/3/26 16:36
+ * Create by LZH
  */
 class Logger implements LoggerInterface
 {
@@ -21,7 +21,7 @@ class Logger implements LoggerInterface
     private $logger;
 
     /**
-     * Logger constructor.
+     * 传入其它日志类
      *
      * @param LoggerInterface|null $logger
      */
@@ -31,7 +31,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * System is unusable.
+     * 整个系统不可用，可输出此日志
      *
      * @param string $message
      * @param array  $context
@@ -43,10 +43,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Action must be taken immediately.
-     *
-     * Example: Entire website down, database unavailable, etc. This should
-     * trigger the SMS alerts and wake you up.
+     * 警报日志
      *
      * @param string $message
      * @param array  $context
@@ -58,9 +55,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Critical conditions.
-     *
-     * Example: Application component unavailable, unexpected exception.
+     * 应用组件不可用，或者异常，可使用该日志
      *
      * @param string $message
      * @param array  $context
@@ -72,8 +67,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Runtime errors that do not require immediate action but should typically
-     * be logged and monitored.
+     * 不需要立即提醒的运行时错误日志
      *
      * @param string $message
      * @param array  $context
@@ -85,10 +79,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Exceptional occurrences that are not errors.
-     *
-     * Example: Use of deprecated APIs, poor use of an API, undesirable things
-     * that are not necessarily wrong.
+     * 非错误的提醒信息
      *
      * @param string $message
      * @param array  $context
@@ -100,7 +91,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Normal but significant events.
+     * 正常但重要的日志
      *
      * @param string $message
      * @param array  $context
@@ -112,9 +103,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Interesting events.
-     *
-     * Example: User logs in, SQL logs.
+     * 用户感兴趣的日志
      *
      * @param string $message
      * @param array  $context
@@ -126,7 +115,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Detailed debug information.
+     * 详细的调试信息
      *
      * @param string $message
      * @param array  $context
@@ -138,7 +127,7 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * Logs with an arbitrary level.
+     * 记录任意等级的日志
      *
      * @param mixed  $level
      * @param string $message
