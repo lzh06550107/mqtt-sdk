@@ -11,25 +11,10 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * 日志接口的装饰器
- * Created on 2022/3/26 16:36
- * Create by LZH
+ * 默认日志实现
  */
-class Logger implements LoggerInterface
+class DefaultLogger implements LoggerInterface
 {
-    /** @var LoggerInterface|null */
-    private $logger;
-
-    /**
-     * 传入其它日志类
-     *
-     * @param LoggerInterface|null $logger
-     */
-    public function __construct(LoggerInterface $logger = null)
-    {
-        $this->logger = $logger;
-    }
-
     /**
      * 整个系统不可用，可输出此日志
      *
@@ -136,10 +121,21 @@ class Logger implements LoggerInterface
      */
     public function log($level, $message, array $context = []): void
     {
-        if ($this->logger === null) {
-            return;
+        $date = date('Y-m-d H:i:s');
+        $msg = $this->interpolate($message, $context);
+
+        echo "[{$date}][{$level}]:[{$msg}]\n";
+    }
+
+    private function interpolate($message, array $context = [])
+    {
+        $replace = [];
+        foreach ($context as $key => $val) {
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace['{' . $key . '}'] = $val;
+            }
         }
 
-        $this->logger->log($level, $message, $context);
+        return strtr($message, $replace);
     }
 }

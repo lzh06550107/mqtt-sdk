@@ -5,14 +5,14 @@
  * Create by LZH
  */
 
-namespace JuLongDeviceMqtt\Common;
+namespace JuLongDeviceMqtt\Exception;
 
 /**
  * 连接断开异常
  * Created on 2022/1/21 11:43
  * Create by LZH
  */
-class DisconnectedException extends \Exception
+class DisconnectedException extends MqttException
 {
 
 }

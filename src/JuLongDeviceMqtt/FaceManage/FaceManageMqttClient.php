@@ -39,8 +39,11 @@ class FaceManageMqttClient extends AbstractMqttClient
      */
     public function publish(string $uuidOrTopic, AbstractRequest $message , $qos = 0, $dup = 0, $retain = 0, $properties = [])
     {
+        $this->connect();
         $topic = new SmartFaceTopic($uuidOrTopic);
-        return parent::_publish($topic, $message, $qos = 0, $dup = 0, $retain = 0, $properties = []);
+        $result = parent::_publish($topic, $message, $qos = 0, $dup = 0, $retain = 0, $properties = []);
+        $this->disconnect();
+        return $result;
     }
 
     /**
@@ -53,12 +56,14 @@ class FaceManageMqttClient extends AbstractMqttClient
      * @author LZH
      * @since 2022/01/21
      */
-    public function subscribe(string $uuidOrTopic, callable $callback): void
+    public function subscribe(string $uuidOrTopic, callable $callback)
     {
+        $this->connect();
         $topic = new AckTopic($uuidOrTopic);
-        parent::_subscribe([$topic], $callback);
+        $result = parent::_subscribe([$topic], $callback);
+        $this->disconnect();
+        return $result;
     }
-
 
 
 }
