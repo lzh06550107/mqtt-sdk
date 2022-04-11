@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt;
 
+use JuLongDeviceMqtt\Common\AbstractRequest;
 use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
 use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
 
@@ -17,8 +18,9 @@ use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
  * Created on 2022/1/20 9:05
  * Create by LZH
  *
- * @method static SyncFaceManageMqttClient syncFaceManageMqttClient() 人脸管理同步客户端
- * @method static SyncParamSettingMqttClient syncParamSettingMqttClient() 设备参数管理同步客户端
+ * @method static SyncFaceManageMqttClient getSyncFaceManageMqttClient(bool $asyncOrSync) 人脸管理同步客户端
+ * @method static SyncParamSettingMqttClient getSyncParamSettingMqttClient(bool $asyncOrSync) 设备参数管理同步客户端
+ * @method string request($uuidOrTopic, AbstractRequest $request) 发送同步请求
  */
 class SyncMqttClient
 {

@@ -17,8 +17,8 @@ use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
  * Created on 2022/1/20 9:05
  * Create by LZH
  *
- * @method static AsyncFaceManageMqttClient asyncFaceManageMqttClient() 人脸管理异步客户端
- * @method static AsyncParamSettingMqttClient asyncParamSettingMqttClient() 设备参数管理异步客户端
+ * @method static AsyncFaceManageMqttClient getAsyncFaceManageMqttClient(bool $asyncOrSync) 人脸管理异步客户端
+ * @method static AsyncParamSettingMqttClient getAsyncParamSettingMqttClient(bool $asyncOrSync) 设备参数管理异步客户端
  */
 class AsyncMqttClient
 {

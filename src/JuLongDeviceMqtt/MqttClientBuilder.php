@@ -24,7 +24,6 @@ use JuLongDeviceMqtt\Common\SyncMqttClient;
  */
 final class MqttClientBuilder extends ClientConfig
 {
-
     /**
      * @var string 中间件主机地址
      */
