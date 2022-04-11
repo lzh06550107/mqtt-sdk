@@ -9,7 +9,13 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt;
 
+use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
+use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
+use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
 use Simps\MQTT\Config\ClientConfig;
+use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\SyncMqttClient;
 
 /**
  * mqtt客户端构建器
@@ -29,7 +35,6 @@ final class MqttClientBuilder extends ClientConfig
      */
     private $brokerPort;
 
-
     /**
      * @return string
      */
@@ -41,9 +46,10 @@ final class MqttClientBuilder extends ClientConfig
     /**
      * @param string $brokerHost
      */
-    public function setBrokerHost(string $brokerHost): void
+    public function setBrokerHost(string $brokerHost)
     {
         $this->brokerHost = $brokerHost;
+        return $this;
     }
 
     /**
@@ -57,14 +63,46 @@ final class MqttClientBuilder extends ClientConfig
     /**
      * @param int $brokerPort
      */
-    public function setBrokerPort(int $brokerPort): void
+    public function setBrokerPort(int $brokerPort)
     {
         $this->brokerPort = $brokerPort;
+        return $this;
     }
 
+    /**
+     * 获取人脸管理客户端
+     * @param bool $asyncOrSync 异步客户端还是同步客户端
+     * @author LZH
+     * @since 2022/04/11
+     */
+    public function getFaceManageMqttClient(bool $asyncOrSync = true)
+    {
+        if ($asyncOrSync) {
+            $asyncMqttClient = new AsyncMqttClient();
+            return new AsyncFaceManageMqttClient($asyncMqttClient);
+        } else {
+            $syncMqttClient = new SyncMqttClient();
+            return new SyncFaceManageMqttClient($syncMqttClient);
+        }
 
+    }
 
+    /**
+     * 获取参数设置客户端
+     * @param bool $asyncOrSync 异步客户端还是同步客户端
+     * @author LZH
+     * @since 2022/04/11
+     */
+    public function getParamSettingMqttClient(bool $asyncOrSync = true)
+    {
+        if ($asyncOrSync) {
+            $asyncMqttClient = new AsyncMqttClient();
+            return new AsyncParamSettingMqttClient($asyncMqttClient);
+        } else {
+            $syncMqttClient = new SyncMqttClient();
+            return new SyncParamSettingMqttClient($syncMqttClient);
+        }
 
-
+    }
 
 }

@@ -15,6 +15,24 @@ use Psr\Log\LogLevel;
  */
 class DefaultLogger implements LoggerInterface
 {
+
+    /** @var string */
+    private $logLevel;
+
+    /** @var int */
+    private $logLevelNumeric;
+
+
+    public function __construct(string $logLevel = null)
+    {
+        if ($logLevel === null) {
+            $logLevel = LogLevel::DEBUG;
+        }
+
+        $this->logLevel        = $logLevel;
+        $this->logLevelNumeric = $this->mapLogLevelToInteger($logLevel);
+    }
+
     /**
      * 整个系统不可用，可输出此日志
      *
@@ -121,6 +139,11 @@ class DefaultLogger implements LoggerInterface
      */
     public function log($level, $message, array $context = []): void
     {
+
+        if ($this->mapLogLevelToInteger($level) < $this->logLevelNumeric) {
+            return;
+        }
+
         $date = date('Y-m-d H:i:s');
         $msg = $this->interpolate($message, $context);
 
@@ -137,5 +160,30 @@ class DefaultLogger implements LoggerInterface
         }
 
         return strtr($message, $replace);
+    }
+
+    private function mapLogLevelToInteger(string $level): int
+    {
+        $map = $this->getLogLevelMap();
+
+        if (!array_key_exists($level, $map)) {
+            return $map[LogLevel::DEBUG];
+        }
+
+        return $map[$level];
+    }
+
+    private function getLogLevelMap(): array
+    {
+        return [
+            LogLevel::DEBUG     => 0,
+            LogLevel::INFO      => 1,
+            LogLevel::NOTICE    => 2,
+            LogLevel::WARNING   => 3,
+            LogLevel::ERROR     => 4,
+            LogLevel::CRITICAL  => 5,
+            LogLevel::ALERT     => 6,
+            LogLevel::EMERGENCY => 7,
+        ];
     }
 }

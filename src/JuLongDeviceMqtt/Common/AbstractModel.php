@@ -157,6 +157,10 @@ abstract class AbstractModel
         }
     }
 
+    public function __toString() {
+        return $this->toJsonString();
+    }
+
     /**
      * 复制一个对象的所有属性到另一个对象
      * @param $fromObj

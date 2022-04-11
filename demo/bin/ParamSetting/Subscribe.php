@@ -19,18 +19,25 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AbstractResponse;
-use JuLongDeviceMqtt\ParamSetting\ParamSettingMqttClient;
+use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
+use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
 Coroutine\run(function () {
-    $paramSettingMqttClient = new ParamSettingMqttClient();
-    $paramSettingMqttClient->setBrokerHost('128.128.20.81');
-    $paramSettingMqttClient->setBrokerPort(1883);
-    $paramSettingMqttClient->setKeepAlive(60);
-    $paramSettingMqttClient->setDelay(10);
-    $paramSettingMqttClient->setMaxAttempts(3);
 
-    $paramSettingMqttClient->setSwooleConfig([
+    $logger = new DefaultLogger(LogLevel::INFO);
+
+    $asyncMqttClient = new AsyncMqttClient();
+
+    $asyncMqttClient->setBrokerHost('128.128.20.81');
+    $asyncMqttClient->setBrokerPort(1883);
+    $asyncMqttClient->setKeepAlive(60);
+    $asyncMqttClient->setDelay(10);
+    $asyncMqttClient->setMaxAttempts(3);
+
+    $asyncMqttClient->setSwooleConfig([
         'open_mqtt_protocol' => true,
         'package_max_length' => 2 * 1024 * 1024,
         'connect_timeout' => 5.0,
@@ -38,10 +45,22 @@ Coroutine\run(function () {
         'read_timeout' => 5.0
     ]);
 
+    $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
+
     // 订阅指定的uuid人脸响应
-    $paramSettingMqttClient->subscribe('fwSkNfgI4JKljlkM', function(\Simps\MQTT\Client $client, AbstractResponse $response) {
+    $paramSettingMqttClient->subscribe('fwSkNfgI4JKljlkM', function (string $topic, string $message, bool $retained) use ($logger, $paramSettingMqttClient) {
+        $logger->info('We received a {typeOfMessage} on topic [{topic}]: {message}', [
+            'topic' => $topic,
+            'message' => $message,
+            'typeOfMessage' => $retained ? 'retained message' : 'message',
+        ]);
 
-        print_r($response); // 打印数据
-
+        // 当我们接收到订阅主题的响应时，客户端停止监听
+        $paramSettingMqttClient->interruptedLoop();
+        $paramSettingMqttClient->disconnect();
     });
+
+    // 开启循环等待订阅消息
+    $paramSettingMqttClient->loop();
+
 });

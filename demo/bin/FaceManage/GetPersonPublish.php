@@ -17,24 +17,28 @@ foreach (
     }
 }
 
-use JuLongDeviceMqtt\FaceManage\FaceManageMqttClient;
+use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\GetPersonRequest;
 use Swoole\Coroutine;
 
-$faceManageBaseMqttClient = new FaceManageMqttClient();
-$faceManageBaseMqttClient->setBrokerHost('128.128.20.81');
-$faceManageBaseMqttClient->setBrokerPort(1883);
-$faceManageBaseMqttClient->setKeepAlive(10);
-$faceManageBaseMqttClient->setDelay(10);
-$faceManageBaseMqttClient->setMaxAttempts(3);
+$asyncMqttClient = new AsyncMqttClient();
 
-$faceManageBaseMqttClient->setSwooleConfig([
+$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient->setBrokerPort(1883);
+$asyncMqttClient->setKeepAlive(10);
+$asyncMqttClient->setDelay(10);
+$asyncMqttClient->setMaxAttempts(3);
+
+$asyncMqttClient->setSwooleConfig([
     'open_mqtt_protocol' => true,
     'package_max_length' => 2 * 1024 * 1024,
     'connect_timeout' => 5.0,
     'write_timeout' => 5.0,
     'read_timeout' => 5.0,
 ]);
+
+$faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $GetPersonRequest = new GetPersonRequest();
 $GetPersonRequest->PersonType = 2;

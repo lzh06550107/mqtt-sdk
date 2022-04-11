@@ -17,31 +17,30 @@ foreach (
     }
 }
 
-use JuLongDeviceMqtt\Common\DisconnectedException;
-use JuLongDeviceMqtt\FaceManage\FaceManageMqttClient;
-use JuLongDeviceMqtt\FaceManage\Models\AddPersonRequest;
-use JuLongDeviceMqtt\FaceManage\Models\BatchAddPersonInfo;
-use JuLongDeviceMqtt\FaceManage\Models\BatchAddPersonRequest;
+use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\BatchDeletePersonInfo;
 use JuLongDeviceMqtt\FaceManage\Models\BatchDeletePersonRequest;
-use JuLongDeviceMqtt\FaceManage\Models\PersonInfo;
-use Simps\MQTT\Protocol\Types;
 use Swoole\Coroutine;
 
-$faceManageBaseMqttClient = new FaceManageMqttClient();
-$faceManageBaseMqttClient->setBrokerHost('128.128.20.81');
-$faceManageBaseMqttClient->setBrokerPort(1883);
-$faceManageBaseMqttClient->setKeepAlive(10);
-$faceManageBaseMqttClient->setDelay(10);
-$faceManageBaseMqttClient->setMaxAttempts(3);
+$asyncMqttClient = new AsyncMqttClient();
 
-$faceManageBaseMqttClient->setSwooleConfig([
+
+$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient->setBrokerPort(1883);
+$asyncMqttClient->setKeepAlive(10);
+$asyncMqttClient->setDelay(10);
+$asyncMqttClient->setMaxAttempts(3);
+
+$asyncMqttClient->setSwooleConfig([
     'open_mqtt_protocol' => true,
     'package_max_length' => 2 * 1024 * 1024,
     'connect_timeout' => 5.0,
     'write_timeout' => 5.0,
     'read_timeout' => 5.0,
 ]);
+
+$faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $batchDeletePersonRequest = new BatchDeletePersonRequest();
 
@@ -50,10 +49,10 @@ $batchDeletePersonInfo->PersonType = 2; // 白名单
 $batchDeletePersonInfo->PersonId = '1';
 $batchDeletePersonRequest->PersonInfo = [$batchDeletePersonInfo];
 
-Coroutine\run(function () use($faceManageBaseMqttClient, $batchDeletePersonRequest) {
+Coroutine\run(function () use ($faceManageBaseMqttClient, $batchDeletePersonRequest) {
 //    while (true) {
-        $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest, 1);
-        var_dump($response);
-        Coroutine::sleep(3);
+    $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest, 1);
+    var_dump($response);
+    Coroutine::sleep(3);
 //    }
 });

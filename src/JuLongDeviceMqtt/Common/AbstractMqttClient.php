@@ -7,19 +7,19 @@
 
 namespace JuLongDeviceMqtt\Common;
 
-use Closure;
 use JuLongDeviceMqtt\Contracts\MqttClient;
 use JuLongDeviceMqtt\Contracts\Repository;
 use JuLongDeviceMqtt\Exception\ClientNotConnectedToBrokerException;
-use JuLongDeviceMqtt\Exception\DisconnectedException;
+use JuLongDeviceMqtt\Exception\InvalidMessageException;
+use JuLongDeviceMqtt\Exception\PendingMessageAlreadyExistsException;
 use JuLongDeviceMqtt\Exception\PendingMessageNotFoundException;
 use JuLongDeviceMqtt\Exception\ProtocolViolationException;
-use PhpMqtt\Client\Exceptions\PendingMessageAlreadyExistsException;
 use Psr\Log\LoggerInterface;
 use Simps\MQTT\Client;
 use Simps\MQTT\Config\ClientConfig;
 use Simps\MQTT\Exception\ProtocolException;
 use Simps\MQTT\Protocol\Types;
+use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -119,29 +119,35 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
 
     /**
      * 订阅
-     * @param array $topics Topics数组
-     * @param Closure $callback 回调函数
+     * @param string $topicFilter 主题
+     * @param callable|null $callback 订阅主题回调函数
+     * @param int $qualityOfService 服务质量
+     * @return array|bool|void 返回值
      * @throws ClientNotConnectedToBrokerException
-     * @since 2022/01/20
+     * @throws PendingMessageAlreadyExistsException
+     * @throws \JuLongDeviceMqtt\Exception\RepositoryException
      * @author LZH
+     * @since 2022/04/11
      */
-    protected function _subscribe(array $topics, Closure $callback)
+    public function subscribe(string $topicFilter, callable $callback = null, int $qualityOfService = MQTT_QOS_0)
     {
-        // 初始化客户端，必须在协程中初始化
-        if (empty($this->client)) {
-            $this->client = new Client($this->getBrokerHost(), $this->getBrokerPort(), $this);
-        }
+        $this->ensureConnected();
 
-        if (!$this->isConnected()) {
-            throw new ClientNotConnectedToBrokerException();
-        }
+        $this->logger->debug('Subscribing to topic [{topicFilter}] with maximum QoS [{qos}].', [
+            'topicFilter' => $topicFilter,
+            'qos' => $qualityOfService,
+        ]);
 
-        // 主题对象数组转换为配置
-        $config = $this->convertTopicToConfig($topics);
+        $messageId = $this->repository->newMessageId();
 
-//        $this->client->connect(true); // TODO 需要传入遗嘱消息
+        // 创建订阅表示，只有在服务端确认后才变成实际的订阅
+        $subscriptions = [new Subscription($topicFilter, $qualityOfService, $callback)];
+
+        $pendingMessage = new SubscribeRequest($messageId, $subscriptions);
+        $this->repository->addPendingOutgoingMessage($pendingMessage);
+
         try {
-            return $this->client->subscribe($config); // 发出订阅消息
+            return $this->client->subscribe([$topicFilter => $qualityOfService]); // 发出订阅消息
         } catch (\Throwable $exception) {
             $this->logger->alert(
                 sprintf('Subscribe failed on Broker "%s"', $this->client->getHost()),
@@ -151,12 +157,51 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
     }
 
     /**
-     * 事件循环
+     * 取消订阅
+     * @param string $topicFilter
+     * @param array $properties
+     * @return array|bool|void
+     * @throws ClientNotConnectedToBrokerException
+     * @throws PendingMessageAlreadyExistsException
+     * @throws \JuLongDeviceMqtt\Exception\RepositoryException
+     * @author LZH
+     * @since 2022/04/11
      */
-    protected function _loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null): void
+    public function unsubscribe(string $topicFilter, array $properties = [])
+    {
+        $this->ensureConnected();
+
+        $this->logger->debug('Unsubscribing from topic [{topicFilter}].', ['topicFilter' => $topicFilter]);
+
+        $messageId    = $this->repository->newMessageId();
+        $topicFilters = [$topicFilter];
+
+        $pendingMessage = new UnsubscribeRequest($messageId, $topicFilters);
+        $this->repository->addPendingOutgoingMessage($pendingMessage);
+
+        try {
+            return $this->client->unSubscribe([$topicFilter], $properties); // TODO 属性参数如何传入
+        } catch (\Throwable $exception) {
+            $this->logger->alert(
+                sprintf('Subscribe failed on Broker "%s"', $this->client->getHost()),
+                ['exception' => $exception]
+            );
+        }
+
+    }
+
+    /**
+     * 订阅后的事件循环，用来监听订阅主题
+     * @param bool $allowSleep 是否允许休眠时间
+     * @param bool $exitWhenQueuesEmpty 当队列为空时，是否允许退出循环
+     * @param int|null $queueWaitLimit 当超过队列等待时间，是否退出循环
+     * @author LZH
+     * @since 2022/04/11
+     */
+    public function loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null)
     {
         // 如果是订阅的话，需要启动一个进程或者协程来循环接收消息
-        \Swoole\Coroutine\go(function () use ($queueWaitLimit, $exitWhenQueuesEmpty, $allowSleep) {
+        $cid = \Swoole\Coroutine\go(function () use ($queueWaitLimit, $exitWhenQueuesEmpty, $allowSleep) {
 
             $this->logger->debug('Starting client loop to process incoming messages and the resend queue.');
 
@@ -175,7 +220,7 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
 
                 try {
 
-                    $resp = $this->client->recv();
+                    $resp = $this->client->recv(); // 等待数据的时候，协程切换
 
                     if ($resp && $resp !== true) { // 只有接收到有效数据才进入该流程
 
@@ -225,56 +270,23 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
                             }
                         }
 
-
-                        // 请求返回成功，不同类型的mqtt消息进行不同的处理
-                        switch ($resp['type']) {
-                            case Types::PUBLISH :
-                                if($resp['qos'] === 1) { // QoS1 PUBACK
-                                    $this->client->send(
-                                        [
-                                            'type' => Types::PUBACK,
-                                            'message_id' => $resp['message_id'],
-                                        ],
-                                        false
-                                    );
-                                }
-                                break;
-                            case Types::DISCONNECT :
-                                echo "Broker is disconnected\n";
-                                $this->client->close();
-                                throw new DisconnectedException(); // 通过抛出异常来关闭订阅循环
-
-                        }
-
-                        $message = json_decode($resp['message'], true); // 对消息体进行json解码
-
-                        // 请求返回错误码，返回1表示设备重启；2表示升级开始，1表示升级成功
-                        if (isset($message['ret']) && $message['ret'] != 0 && $message['ret'] != 1 && $message['ret'] != 2) {
-                            throw $this->errorCodeConvertToException($message);
-                        }
-
-//                        call_user_func($callback, $this->client, $this->parseResponse($message)); // 传入接收的数据
-
                     } elseif($allowSleep) {
-                        usleep(100000); // 100ms
+                        Coroutine::sleep(1); // 睡眠1s，协程切换
                     }
-
-
 
                 } catch (\Throwable $e) {
-                    if ($e instanceof DisconnectedException) {
-                        break; // 断线，则跳出循环
-                    }
                     throw $e;
                 }
             }
         });
+
+        return $cid; // 返回创建的协程id
     }
 
     /**
      * 中断订阅循环
      */
-    protected function _interruptedLoop()
+    public function interruptedLoop()
     {
         if ($this->interruptedChannel) {
             return $this->interruptedChannel->push(1); // 中断订阅循环
@@ -284,41 +296,67 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
 
     /**
      * 发布
-     * @param Topic $topic 发布主题实例对象
-     * @param AbstractRequest $request 发布到主题的请求对象，即消息
-     * @param int $qos 发布质量
-     * @param int $dup 是否重复发送
-     * @param int $retain 消息是否持久保存并发送
-     * @param array $properties 额外消息属性
-     * @return array|bool|void
+     * @param string $topic
+     * @param string $message
+     * @param int $qualityOfService
+     * @param int $retain
      * @throws ClientNotConnectedToBrokerException
+     * @throws PendingMessageAlreadyExistsException
+     * @throws \JuLongDeviceMqtt\Exception\RepositoryException
      * @author LZH
-     * @since 2022/01/20
+     * @since 2022/04/11
      */
-    protected function _publish(Topic $topic, AbstractRequest $request, $qos = 0, $dup = 0, $retain = 0, $properties = [])
+    public function publish(string $uuidOrTopic, string $message , int $qualityOfService = 0, int $dup = 0, int $retain = 0, array $properties = [])
     {
-        $responseData = null;
+        $this->ensureConnected();
 
-        // 初始化客户端，必须在协程中初始化
-        if (empty($this->client)) {
-            $this->client = new Client($this->getBrokerHost(), $this->getBrokerPort(), $this);
+        $messageId = null;
+
+        if ($qualityOfService > MQTT_QOS_0) { // 消息质量大于0 ，则需要确认
+            $messageId = $this->repository->newMessageId();
+
+            $pendingMessage = new PublishedMessage($messageId, $uuidOrTopic, $message, $qualityOfService, $retain);
+            $this->repository->addPendingOutgoingMessage($pendingMessage);
         }
 
-        if (!$this->isConnected()) {
-            throw new ClientNotConnectedToBrokerException();
-        }
+        return $this->publishMessage($uuidOrTopic, $message, $qualityOfService, $retain, $messageId);
+    }
 
-        if (empty($request->TaskID)) {
-            $request->TaskID = strval($this->client->buildMessageId()); // 给请求设置消息id
-        }
+    /**
+     * 实际发布消息
+     *
+     * @param string $topic
+     * @param string $message
+     * @param int $qualityOfService
+     * @param bool $retain
+     * @param int|null $messageId
+     * @param bool $isDuplicate
+     * @author LZH
+     * @since 2022/04/11
+     */
+    protected function publishMessage(
+        string $topic,
+        string $message,
+        int $qualityOfService,
+        bool $retain,
+        int $messageId = null,
+        bool $isDuplicate = false
+    )
+    {
+        $this->logger->debug('Publishing a message on topic [{topic}]: {message}', [
+            'topic' => $topic,
+            'message' => $message,
+            'qos' => $qualityOfService,
+            'retain' => $retain,
+            'messageId' => $messageId,
+            'isDuplicate' => $isDuplicate,
+        ]);
 
-        $message = $request->toJsonString(); // 请求对象序列化并转换为json字符串
-
-//        print_r(json_decode($message, true));
-        print_r($message);
+        // 运行发布消息事件处理器
+        $this->runPublishEventHandlers($topic, $message, $messageId, $qualityOfService, $retain);
 
         try {
-            return $this->client->publish($topic, $message, $qos = 0, $dup = 0, $retain = 0, $properties = []);
+            return $this->client->publish($topic, $message, $qualityOfService, $isDuplicate, $retain);
         } catch (\Throwable $exception) {
             if ($exception instanceof ProtocolException) {
                 $this->logger->critical(
@@ -335,26 +373,17 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
         }
     }
 
-    /**
-     * 子类实现
-     * @param string $uuidOrTopic
-     * @param AbstractRequest $message
-     * @param $qualityOfService
-     * @param $dup
-     * @param $retain
-     * @param $properties
-     * @author LZH
-     * @since 2022/04/08
-     */
-    public function publish(string $uuidOrTopic, AbstractRequest $message, $qualityOfService = 0, $dup = 0, $retain = 0, $properties = []): void
-    {
-        // TODO: Implement publish() method.
-    }
 
     /**
      * 连接服务器
+     *
+     * @param bool $clean
+     * @param array $will
+     * @return array|bool|void
+     * @author LZH
+     * @since 2022/04/11
      */
-    public function connect(bool $clean = true, array $will = []): void
+    public function connect(bool $clean = true, array $will = [])
     {
         // 初始化客户端
         if (empty($this->client)) {
@@ -362,7 +391,7 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
         }
 
         try {
-            $connectResult = $this->client->connect($clean, $will);
+            return $this->client->connect($clean, $will);
         } catch (\Throwable $exception) {
             if ($exception instanceof ProtocolException) {
                 $this->logger->critical(
@@ -385,21 +414,23 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
      */
     public function disconnect(): void
     {
-        if (empty($this->client)) {
-            return; // 客户端没有初始化，则立即返回
-        }
+        $this->ensureConnected();
 
-        if (!$this->isConnected()) {
-            throw new ClientNotConnectedToBrokerException();
-        }
-
+        $result = false;
         try {
-            $this->client->close();
+            $result = $this->client->close();
         } catch (\Throwable $exception) {
             $this->logger->alert(
                 sprintf('Closing failed on Broker "%s"', $this->client->getHost()),
                 ['exception' => $exception]
             );
+        } finally {
+            if (!$result) {
+                $this->logger->alert(
+                    sprintf('Closing failed on Broker "%s"', $this->client->getHost()),
+                    ['result' => false]
+                );
+            }
         }
     }
 
@@ -432,26 +463,6 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
     private function errorCodeConvertToException($Resp)
     {
         return new \Exception(implode(',', $Resp)); // TODO 这里需要初始化
-    }
-
-    /**
-     * 主题对象数组转换为配置
-     * @param array $topics 主题对象数组
-     * @author LZH
-     * @since 2022/01/25
-     */
-    private function convertTopicToConfig(array $topics): array
-    {
-        if (empty($topics)) { // TODO 需要兼容mqtt5协议
-            return [];
-        }
-
-        $config = [];
-        foreach ($topics as $topic) {
-            /* @var Topic $topic */
-            $config[strval($topic)] = 1; // 转换为字符串
-        }
-        return $config;
     }
 
     protected function parseResponse($resp) : ?AbstractResponse
@@ -556,8 +567,6 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             try {
                 $result = $this->repository->markPendingOutgoingPublishedMessageAsReceived($message['message_id']);
             } catch (PendingMessageNotFoundException $e) {
-                // This should never happen as we should have received all PUBREC messages before we see the first
-                // PUBCOMP which actually remove the message. So we do this for safety only.
                 $result = false;
             }
 
@@ -627,9 +636,7 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             }
 
             foreach ($message['codes'] as $index => $qualityOfService) {
-                // It may happen that the server registers our subscription
-                // with a lower quality of service than requested, in this
-                // case this is the one that we will record.
+                // 服务端发布的消息比订阅的消息质量低，在这种情况下我们需要记录。
                 $acknowledgedSubscriptions[$index]->setQualityOfServiceLevel($qualityOfService); // 返回的服务质量可能会变
 
                 $this->repository->addSubscription($acknowledgedSubscriptions[$index]);
@@ -709,6 +716,15 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
      */
     protected function deliverPublishedMessage(string $topic, string $message, int $qualityOfServiceLevel, bool $retained = false): void
     {
+
+        // 业务消息的异常转换
+        $message = json_decode($message, true); // 对消息体进行json解码
+
+        // 请求返回错误码，返回1表示设备重启；2表示升级开始，1表示升级成功
+        if (isset($message['ret']) && $message['ret'] != 0 && $message['ret'] != 1 && $message['ret'] != 2) {
+            throw $this->errorCodeConvertToException($message);
+        }
+
         $subscribers = $this->repository->getSubscriptionsMatchingTopic($topic);
 
         $this->logger->debug('Delivering message received on topic [{topic}] with QoS [{qos}] from the broker to [{subscribers}] subscribers.', [
@@ -767,6 +783,133 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             'type' => Types::PUBCOMP,
             'message_id' => $messageId ?? 0,
         ], false);
+    }
+
+    /**
+     * 重新发布待处理消息，即没有确认的消息
+     *
+     * @throws \Exception
+     * @author LZH
+     * @since 2022/04/11
+     */
+    protected function resendPendingMessages(): void
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $dateTime = (new \DateTime())->sub(new \DateInterval('PT' . $this->getResendTimeout() . 'S'));
+        $messages = $this->repository->getPendingOutgoingMessagesLastSentBefore($dateTime);
+
+        // 对于超过重发时间的待处理消息进行处理
+        foreach ($messages as $pendingMessage) {
+            if ($pendingMessage instanceof PublishedMessage) { // 对于待确认的发布消息，如果指定的时间没有确认，则重新发送
+                $this->logger->debug('Re-publishing pending message to the broker.', [
+                    'messageId' => $pendingMessage->getMessageId(),
+                ]);
+
+                $this->publishMessage(
+                    $pendingMessage->getTopicName(),
+                    $pendingMessage->getMessage(),
+                    $pendingMessage->getQualityOfServiceLevel(),
+                    $pendingMessage->wantsToBeRetained(),
+                    $pendingMessage->getMessageId(),
+                    true
+                );
+
+            } elseif ($pendingMessage instanceof SubscribeRequest) { // 对于订阅请求，如果没有确认，则重发
+                $this->logger->debug('Re-sending pending subscribe request to the broker.', [
+                    'messageId' => $pendingMessage->getMessageId(),
+                ]);
+
+                // 订阅消息
+                $data = $this->buildSubscribeMessage($pendingMessage->getMessageId(), $pendingMessage->getSubscriptions(), [], true);
+                $this->client->send($data, false);
+            } elseif ($pendingMessage instanceof UnsubscribeRequest) { // 对于取消订阅请求，如果没有确认，则重发
+                $this->logger->debug('Re-sending pending unsubscribe request to the broker.', [
+                    'messageId' => $pendingMessage->getMessageId(),
+                ]);
+
+                $data = $this->buildUnsubscribeMessage($pendingMessage->getMessageId(), $pendingMessage->getTopicFilters(), true);
+                $this->client->send($data, false);
+            } else {
+                throw new InvalidMessageException('Unexpected message type encountered while resending pending messages.');
+            }
+
+            $pendingMessage->setLastSentAt(new \DateTime());
+            $pendingMessage->incrementSendingAttempts();
+        }
+    }
+
+
+    /**
+     * 确保客户端连接到中间件
+     * @throws ClientNotConnectedToBrokerException
+     * @author LZH
+     * @since 2022/04/11
+     */
+    protected function ensureConnected(): void
+    {
+        if (!$this->isConnected()) {
+            throw new ClientNotConnectedToBrokerException(
+                'The client is not connected to a broker. The requested operation is impossible at this point.'
+            );
+        }
+    }
+
+    /**
+     * 构建订阅消息
+     * @param int $messageId
+     * @param array $subscriptions
+     * @param $properties
+     * @param bool $isDuplicate
+     * @return array
+     * @author LZH
+     * @since 2022/04/11
+     */
+    private function buildSubscribeMessage(int $messageId, array $subscriptions, $properties = [], bool $isDuplicate = false)
+    {
+        $topics = [];
+        foreach ($subscriptions as $subscription) {
+            $topics[$subscription->getTopicFilter()] = $subscription->getQualityOfServiceLevel();
+        }
+
+        return [
+            'type' => Types::SUBSCRIBE,
+            'message_id' => $messageId,
+            'properties' => $properties,
+            'topics' => $topics,
+        ];
+    }
+
+    /**
+     * 构建取消订阅消息
+     * @param int $messageId
+     * @param array $topics
+     * @param bool $isDuplicate
+     * @return array
+     * @author LZH
+     * @since 2022/04/11
+     */
+    public function buildUnsubscribeMessage(int $messageId, array $topics, $properties = [], bool $isDuplicate = false)
+    {
+
+        return [
+            'type' => Types::UNSUBSCRIBE,
+            'message_id' => $messageId,
+            'properties' => $properties,
+            'topics' => $topics,
+        ];
+
+    }
+
+    /**
+     * 判断所有的队列是否为空
+     * @return bool
+     * @author LZH
+     * @since 2022/04/11
+     */
+    protected function allQueuesAreEmpty(): bool
+    {
+        return $this->repository->countPendingOutgoingMessages() === 0 &&
+            $this->repository->countPendingIncomingMessages() === 0;
     }
 
 }

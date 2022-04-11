@@ -9,25 +9,25 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt;
 
+use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
+use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
+
 /**
- * mqtt客户端
+ * mqtt同步客户端
  * Created on 2022/1/20 9:05
  * Create by LZH
+ *
+ * @method static SyncFaceManageMqttClient syncFaceManageMqttClient() 人脸管理同步客户端
+ * @method static SyncParamSettingMqttClient syncParamSettingMqttClient() 设备参数管理同步客户端
  */
-class MqttClient
+class SyncMqttClient
 {
     /**
      * @var string[] 已经实现的客户端类
      */
     private static $method = [
-        'BaseClient',
-        'AccessControlPasswordClient',
-        'AccessStrategyClient',
-        'FaceCompareClient',
-        'FaceManageClient',
-        'HealthCodeClient',
-        'NVRManageClient',
-        'ParamSettingClient'
+        'SyncFaceManageMqttClient',
+        'SyncParamSettingMqttClient',
     ];
 
     private static MqttClientBuilder $mqttClientBuilder;

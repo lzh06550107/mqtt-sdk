@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt\Contracts;
 
-use JuLongDeviceMqtt\Common\AbstractRequest;
-
 /**
  * mqtt客户端接口
  */
@@ -21,7 +19,7 @@ interface MqttClient
      */
     public function connect(
         bool $clean = true, array $will = []
-    ): void;
+    );
 
     /**
      * 断开连接
@@ -41,15 +39,15 @@ interface MqttClient
     /**
      * 在给定主题上发布给定消息。如果设置了额外的服务质量和保留标志，则将使用这些设置发布消息。
      * @param string $uuidOrTopic
-     * @param AbstractRequest $message
-     * @param $qualityOfService
-     * @param $dup
-     * @param $retain
-     * @param $properties
+     * @param string $message
+     * @param int $qualityOfService
+     * @param int $dup
+     * @param int $retain
+     * @param array $properties
      * @author LZH
      * @since 2022/04/08
      */
-    public function publish(string $uuidOrTopic, AbstractRequest $message , $qualityOfService = 0, $dup = 0, $retain = 0, $properties = []): void;
+    public function publish(string $uuidOrTopic, string $message , int $qualityOfService = 0, int $dup = 0, int $retain = 0, array $properties = []);
 
     /**
      * 订阅给定服务质量的主题
@@ -77,7 +75,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function subscribe(string $topicFilter, callable $callback = null, int $qualityOfService = 0): void;
+    public function subscribe(string $topicFilter, callable $callback = null, int $qualityOfService = 0);
 
     /**
      * 解除订阅给定的主题
@@ -85,14 +83,14 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function unsubscribe(string $topicFilter): void;
+    public function unsubscribe(string $topicFilter);
 
     /**
      * 中断订阅循环
      * @author LZH
      * @since 2022/04/08
      */
-    public function interrupt(): void;
+    public function interruptedLoop();
 
     /**
      * 开启一个协程来处理服务端返回的消息并调用订阅回调函数
@@ -107,7 +105,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null): void;
+    public function loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null);
 
 
     /**
@@ -116,7 +114,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function getHost(): string;
+    public function getBrokerHost(): string;
 
     /**
      * 返回连接到服务器端口
@@ -124,7 +122,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function getPort(): int;
+    public function getBrokerPort(): int;
 
     /**
      * 返回客户端标志id
