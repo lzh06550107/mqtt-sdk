@@ -16,16 +16,19 @@ use JuLongDeviceMqtt\Exception\RepositoryException;
  */
 class MemoryRepository implements Repository
 {
-    private int $nextMessageId = 1;
+    /**
+     * @var int 消息id
+     */
+    private $nextMessageId = 1;
 
     /** @var array<int, PendingMessage> 待处理输出消息 */
-    private array $pendingOutgoingMessages = [];
+    private $pendingOutgoingMessages = [];
 
     /** @var array<int, PendingMessage> 待处理输入消息 */
-    private array $pendingIncomingMessages = [];
+    private $pendingIncomingMessages = [];
 
     /** @var array<int, Subscription>  订阅实例对象 */
-    private array $subscriptions = [];
+    private $subscriptions = [];
 
     /**
      * {@inheritDoc}

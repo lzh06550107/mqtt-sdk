@@ -9,11 +9,30 @@ namespace JuLongDeviceMqtt\Common;
  */
 class PublishedMessage extends PendingMessage
 {
-    private string $topicName; // 主题名称
-    private string $message; // 消息内容
-    private int $qualityOfService; // 服务质量
-    private bool $retain; // 是否保留消息
-    private bool $received = false; // 该消息是否已经被确认，服务质量1和2都需要确认
+    /**
+     * @var string 主题名称
+     */
+    private $topicName;
+
+    /**
+     * @var string 消息内容
+     */
+    private $message;
+
+    /**
+     * @var int 服务质量
+     */
+    private $qualityOfService;
+
+    /**
+     * @var bool 是否保留消息
+     */
+    private $retain;
+
+    /**
+     * @var bool 该消息是否已经被确认，服务质量1和2都需要确认
+     */
+    private $received = false;
 
     /**
      * 创建一个新的发布消息对象

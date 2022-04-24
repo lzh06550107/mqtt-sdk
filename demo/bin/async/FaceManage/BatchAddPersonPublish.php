@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,15 +19,20 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\BatchAddPersonInfo;
 use JuLongDeviceMqtt\FaceManage\Models\BatchAddPersonRequest;
 use JuLongDeviceMqtt\FaceManage\Models\PersonInfo;
+use JuLongDeviceMqtt\FaceManage\PersonIdentity;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient = new AsyncMqttClient(null, $logger);
+
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -44,78 +50,77 @@ $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $batchAddPersonRequest = new BatchAddPersonRequest();
 
-$batchAddPersonRequest->PhotoType = 0;
-$batchAddPersonRequest->PersonTotal = 1;
+$batchAddPersonRequest->setPhotoType(0);
+$batchAddPersonRequest->setPersonTotal(1);
 
 $batchAddPersonInfo1 = new BatchAddPersonInfo();
 
-$batchAddPersonInfo1->OperateType = 0;
-$batchAddPersonInfo1->PersonCover = 1;
-$batchAddPersonInfo1->PersonType = 2;
+$batchAddPersonInfo1->setOperateType(0);
+$batchAddPersonInfo1->setPersonCover(1);
+$batchAddPersonInfo1->setPersonType(2);
 
 $personInfo1 = new PersonInfo();
-$personInfo1->PersonId = '1';
-$personInfo1->ICCard = 'id1';
-$personInfo1->ICCardList = [
+$personInfo1->setPersonId('1');
+$personInfo1->setICCard('id1');
+$personInfo1->setICCardList([
     "321281199002271070",
     "321281199002271071"
-];
-$personInfo1->IDCard = '321281199002271069';
-$personInfo1->PersonName = 'test1';
-$personInfo1->Sex = 2;
-$personInfo1->Nation = '广东';
-$personInfo1->Birthday = '1990-09-12';
-$personInfo1->Phone = '13654124584';
-$personInfo1->Address = '广东省广州市';
-$personInfo1->LimitTime = 0;
-$personInfo1->StartTime = '2020-09-12 09:10:00';
-$personInfo1->EndTime = '2021-09-12 09:10:00';
-$personInfo1->PersonIdentity = 0;
-$personInfo1->IdentityAttribute = 0;
+]);
+$personInfo1->setIDCard('321281199002271069');
+$personInfo1->setPersonName('test1');
+$personInfo1->setSex(2);
+$personInfo1->setNation('广东');
+$personInfo1->setBirthday('1990-09-12');
+$personInfo1->setPhone('13654124584');
+$personInfo1->setAddress('广东省广州市');
+$personInfo1->setLimitTime(0);
+$personInfo1->setStartTime('2020-09-12 09:10:00');
+$personInfo1->setEndTime('2021-09-12 09:10:00');
+$personInfo1->setPersonIdentity(new PersonIdentity(PersonIdentity::ALL));
+$personInfo1->setIdentityAttribute(0);
 
-$personInfo1->PhotoType = 0;
+$personInfo1->setPhotoType(0);
 // 04f8532b016fde1b.jpg
-$personInfo1->PersonPhotoUrl = 'http://qczxadmin.jvt.cc/temp/image/2021/11/901d316b7b30d3ca.jpg';
+$personInfo1->setPersonPhotoUrl('http://qczxadmin.jvt.cc/temp/image/2021/11/901d316b7b30d3ca.jpg');
 
-$batchAddPersonInfo1->PersonInfo = $personInfo1;
+$batchAddPersonInfo1->setPersonInfo($personInfo1);
 
 $batchAddPersonInfo2 = new BatchAddPersonInfo();
 
-$batchAddPersonInfo2->OperateType = 0;
-$batchAddPersonInfo2->PersonCover = 1;
-$batchAddPersonInfo2->PersonType = 2;
+$batchAddPersonInfo2->setOperateType(0);
+$batchAddPersonInfo2->setPersonCover(1);
+$batchAddPersonInfo2->setPersonType(2);
 
 $personInfo2 = new PersonInfo();
-$personInfo2->PersonId = '2';
-$personInfo2->ICCard = 'id2';
-$personInfo2->ICCardList = [
+$personInfo2->setPersonId('2');
+$personInfo2->setICCard('id2');
+$personInfo2->setICCardList([
     "321281199002271072",
     "321281199002271073"
-];
-$personInfo2->IDCard = '321281199002271070';
-$personInfo2->PersonName = 'test2';
-$personInfo2->Sex = 1;
-$personInfo2->Nation = '广东';
-$personInfo2->Birthday = '1990-09-12';
-$personInfo2->Phone = '13654124584';
-$personInfo2->Address = '广东省广州市';
-$personInfo2->LimitTime = 0;
-$personInfo2->StartTime = '2020-09-12 09:10:00';
-$personInfo2->EndTime = '2021-09-12 09:10:00';
-$personInfo2->PersonIdentity = 0;
-$personInfo2->IdentityAttribute = 0;
+]);
+$personInfo2->setIDCard('321281199002271070');
+$personInfo2->setPersonName('test2');
+$personInfo2->setSex(1);
+$personInfo2->setNation('广东');
+$personInfo2->setBirthday('1990-09-12');
+$personInfo2->setPhone('13654124584');
+$personInfo2->setAddress('广东省广州市');
+$personInfo2->setLimitTime(0);
+$personInfo2->setStartTime('2020-09-12 09:10:00');
+$personInfo2->setEndTime('2021-09-12 09:10:00');
+$personInfo2->setPersonIdentity(new PersonIdentity(PersonIdentity::ALL));
+$personInfo2->setIdentityAttribute(0);
 
-$personInfo2->PhotoType = 0;
-$personInfo2->PersonPhotoUrl = 'http://qczxadmin.jvt.cc/temp/image/2021/09/04f8532b016fde1b.jpg';
+$personInfo2->setPhotoType(0);
+$personInfo2->setPersonPhotoUrl('http://qczxadmin.jvt.cc/temp/image/2021/09/04f8532b016fde1b.jpg');
 
-$batchAddPersonInfo2->PersonInfo = $personInfo2;
+$batchAddPersonInfo2->setPersonInfo($personInfo2);
 
-$batchAddPersonRequest->PersonInfo = [ $batchAddPersonInfo1, $batchAddPersonInfo2 ];
+$batchAddPersonRequest->setPersonInfo([ $batchAddPersonInfo1, $batchAddPersonInfo2 ]);
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $batchAddPersonRequest) {
 //    while (true) {
-        $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchAddPersonRequest, 1);
-        var_dump($response);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchAddPersonRequest);
         Coroutine::sleep(3);
 //    }
 });

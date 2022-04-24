@@ -41,13 +41,13 @@ interface MqttClient
      * @param string $uuidOrTopic
      * @param string $message
      * @param int $qualityOfService
-     * @param int $dup
-     * @param int $retain
+     * @param bool $dup
+     * @param false $retain
      * @param array $properties
      * @author LZH
      * @since 2022/04/08
      */
-    public function publish(string $uuidOrTopic, string $message , int $qualityOfService = 0, int $dup = 0, int $retain = 0, array $properties = []);
+    public function publish(string $uuidOrTopic, string $message , int $qualityOfService = 0, bool $dup = false, bool $retain = false, array $properties = []) : void;
 
     /**
      * 订阅给定服务质量的主题
@@ -75,7 +75,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function subscribe(string $topicFilter, callable $callback = null, int $qualityOfService = 0);
+    public function subscribe(string $topicFilter, callable $callback = null, int $qualityOfService = 0) : void;
 
     /**
      * 解除订阅给定的主题
@@ -83,14 +83,14 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function unsubscribe(string $topicFilter);
+    public function unsubscribe(string $topicFilter) : void;
 
     /**
      * 中断订阅循环
      * @author LZH
      * @since 2022/04/08
      */
-    public function interruptedLoop();
+    public function interruptedLoop() : void;
 
     /**
      * 开启一个协程来处理服务端返回的消息并调用订阅回调函数
@@ -105,7 +105,7 @@ interface MqttClient
      * @author LZH
      * @since 2022/04/08
      */
-    public function loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null);
+    public function loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null) : void;
 
 
     /**

@@ -13,7 +13,7 @@ namespace JuLongDeviceMqtt\Common;
 class SubscribeRequest extends PendingMessage
 {
     /** @var Subscription[] 一个订阅请求可能包括多个主题订阅 */
-    private array $subscriptions;
+    private $subscriptions;
 
     /**
      * 创建一个订阅请求消息

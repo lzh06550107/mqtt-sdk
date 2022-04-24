@@ -5,6 +5,8 @@
  * Create by LZH
  */
 
+declare(strict_types=1);
+
 namespace JuLongDeviceMqtt;
 
 use JuLongDeviceMqtt\Common\Topic;

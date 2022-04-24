@@ -5,6 +5,8 @@
  * Create by LZH
  */
 
+declare(strict_types=1);
+
 namespace JuLongDeviceMqtt\FaceManage\Models;
 
 use JuLongDeviceMqtt\Common\AbstractRequest;
@@ -15,34 +17,87 @@ use JuLongDeviceMqtt\FaceManage\FaceManageAction;
  * Created on 2022/2/10 11:09
  * Create by LZH
  *
+ * @method  setPersonInfo(BatchAddPersonInfo[] $personInfo) 批量添加人员信息
  */
 class BatchAddPersonRequest extends AbstractRequest
 {
+
+    protected $extraProperty = ["PersonInfo"];
+
     /**
      * @var int 图片下发类型 0：URL(PersonPhotoUrl)；1：Base64(PersonPhoto)；2：特征值(FeatureValue)；3：IC卡(ICCard，人卡分离)
      */
-    public $PhotoType;
+    private $PhotoType;
 
     /**
-     * @var int 人员特征值类型 0：float；1：char；2：int；3：通用类型
+     * @var int|null 人员特征值类型 0：float；1：char；2：int；3：通用类型
      */
-    public $FeatureType;
+    private $FeatureType;
 
     /**
-     * @var int 人员总数
+     * @var int|null 人员总数
      */
-    public $PersonTotal;
+    private $PersonTotal;
 
     /**
      * @var BatchAddPersonInfo[] 批量添加人员信息
      */
-    public $PersonInfo;
+    private $PersonInfo;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::ADD_PERSONS; // 初始化动作名称
+        $this->setAction(FaceManageAction::ADD_PERSONS); // 初始化动作名称
     }
+
+    /**
+     * @return int
+     */
+    public function getPhotoType(): int
+    {
+        return $this->PhotoType;
+    }
+
+    /**
+     * @param int $PhotoType
+     */
+    public function setPhotoType(int $PhotoType): void
+    {
+        $this->PhotoType = $PhotoType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFeatureType(): ?int
+    {
+        return $this->FeatureType;
+    }
+
+    /**
+     * @param int|null $FeatureType
+     */
+    public function setFeatureType(?int $FeatureType): void
+    {
+        $this->FeatureType = $FeatureType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPersonTotal(): ?int
+    {
+        return $this->PersonTotal;
+    }
+
+    /**
+     * @param int|null $PersonTotal
+     */
+    public function setPersonTotal(?int $PersonTotal): void
+    {
+        $this->PersonTotal = $PersonTotal;
+    }
+
 }

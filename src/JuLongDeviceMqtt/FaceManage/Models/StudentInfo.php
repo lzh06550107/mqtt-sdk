@@ -5,6 +5,8 @@
  * Create by LZH
  */
 
+declare(strict_types=1);
+
 namespace JuLongDeviceMqtt\FaceManage\Models;
 
 // 分班播报学生信息列表

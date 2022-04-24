@@ -9,6 +9,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,6 +19,7 @@ foreach (
     }
 }
 
+use JuLongDeviceMqtt\Common\AbstractResponse;
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
 use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
@@ -28,9 +30,9 @@ Coroutine\run(function () {
 
     $logger = new DefaultLogger(LogLevel::INFO);
 
-    $asyncMqttClient = new AsyncMqttClient();
+    $asyncMqttClient = new AsyncMqttClient(null, $logger);
 
-    $asyncMqttClient->setBrokerHost('128.128.20.81');
+    $asyncMqttClient->setBrokerHost('128.128.13.90');
     $asyncMqttClient->setBrokerPort(1883);
     $asyncMqttClient->setKeepAlive(60);
     $asyncMqttClient->setDelay(10);
@@ -46,8 +48,12 @@ Coroutine\run(function () {
 
     $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
+//    $faceManageBaseMqttClient->registerLoopEventHandler(function() {
+//        echo '调用循环事件处理器' . PHP_EOL;
+//    });
+
     // 订阅指定的uuid人脸响应
-    $faceManageBaseMqttClient->subscribe('fwSkNfgI4JKljlkM', function (string $topic, string $message, bool $retained) use ($logger, $faceManageBaseMqttClient) {
+    $faceManageBaseMqttClient->subscribe('fwSkNfgI4JKljlkM', function (string $topic, AbstractResponse $message, bool $retained) use ($logger, $faceManageBaseMqttClient) {
         $logger->info('We received a {typeOfMessage} on topic [{topic}]: {message}', [
             'topic' => $topic,
             'message' => $message,

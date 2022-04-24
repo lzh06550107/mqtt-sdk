@@ -15,9 +15,20 @@ use DateTime;
  */
 abstract class PendingMessage
 {
-    private int $messageId; // 消息id
-    private int $sendingAttempts = 1; // 消息重发次数
-    private DateTime $lastSentAt; // 最近一次发送时间
+    /**
+     * @var int 消息id
+     */
+    private $messageId;
+
+    /**
+     * @var int 消息重发次数
+     */
+    private $sendingAttempts = 1;
+
+    /**
+     * @var DateTime 最近一次发送时间
+     */
+    private $lastSentAt;
 
     /**
      * 创建一个新的待处理消息对象

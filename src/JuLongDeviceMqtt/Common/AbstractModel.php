@@ -5,7 +5,12 @@
  * Create by LZH
  */
 
+declare(strict_types=1);
+
 namespace JuLongDeviceMqtt\Common;
+
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * 抽象模型类
@@ -14,6 +19,7 @@ namespace JuLongDeviceMqtt\Common;
  */
 abstract class AbstractModel
 {
+
     /**
      * 内部实现，用户禁止调用
      */
@@ -34,18 +40,44 @@ abstract class AbstractModel
 
         $memberRet = [];
 
-        foreach ($obj as $property => $value)
-        {
-            $propertyName = ucfirst($property); // 属性的首字母大写
-            if ($value === null) { // 忽略值为null的属性
+        // 反射获取对象所有方法
+        $reflectionClassObj = new ReflectionClass(get_class($obj));
+        $allPublicMethods = $reflectionClassObj->getMethods( ReflectionMethod::IS_PUBLIC);
+
+        $allSetMethods = [];
+        $allGetMethods = [];
+        foreach ($allPublicMethods as $publicMethod) {
+            $methodName = substr($publicMethod->name, 3);
+            if (str_starts_with($publicMethod->name, 'set')) {
+                $allSetMethods[$methodName] = $publicMethod;
+            } elseif (str_starts_with($publicMethod->name, 'get')) {
+                $allGetMethods[$methodName] = $publicMethod;
+            }
+        }
+
+        foreach ($allGetMethods as $propertyName => $setMethod) {
+            $value = $setMethod->invoke($obj); // 获取属性值
+
+            if ($propertyName === 'TaskID' && $value === null) { // 如果属性名称是 TaskID 且该值为空，则自动生成一个
+                $memberRet[$propertyName] = uniqid('taskid_');
+            }
+
+            if ($value === null) {
                 continue;
             }
+
             if ($value instanceof \JuLongDeviceMqtt\Common\AbstractModel) { // 如果还是模型对象，则递归序列化
                 $memberRet[$propertyName] = $this->objSerialize($value);
             } else if (is_array($value)) { // 如果是数组，则数组系列化
                 $memberRet[$propertyName] = $this->arraySerialize($value);
             } else {
                 $memberRet[$propertyName] = $value;
+            }
+        }
+
+        if ($obj instanceof AbstractRequest && $obj->_dynamicPropertyArray) { // 请求类存在非空额外属性值，则需要收集
+            foreach ($obj->_dynamicPropertyArray as $propertyName => $propertyValue) {
+                $memberRet[$propertyName] = $propertyValue;
             }
         }
 

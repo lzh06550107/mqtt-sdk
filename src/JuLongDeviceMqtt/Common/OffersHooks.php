@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt\Common;
 
-
 use JuLongDeviceMqtt\Contracts\MqttClient;
 
 /**
@@ -231,13 +230,13 @@ trait OffersHooks
     /**
      * 使用给定的参数执行接收消息事件处理器
      * @param string $topic
-     * @param string $message
+     * @param AbstractResponse $message
      * @param int $qualityOfService
      * @param bool $retained
      * @author LZH
      * @since 2022/04/08
      */
-    private function runMessageReceivedEventHandlers(string $topic, string $message, int $qualityOfService, bool $retained): void
+    private function runMessageReceivedEventHandlers(string $topic, AbstractResponse $message, int $qualityOfService, bool $retained): void
     {
         foreach ($this->messageReceivedEventHandlers as $handler) {
             try {

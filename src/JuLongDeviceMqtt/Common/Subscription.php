@@ -11,10 +11,25 @@ namespace JuLongDeviceMqtt\Common;
  */
 class Subscription
 {
-    private string $topicFilter; // 主题名称
-    private string $regexifiedTopicFilter; // 正在表达式主题过滤器
-    private int $qualityOfService; // 服务质量
-    private ?\Closure $callback; // 订阅主题的回调方法
+    /**
+     * @var string 主题名称
+     */
+    private $topicFilter;
+
+    /**
+     * @var string 正在表达式主题过滤器
+     */
+    private $regexifiedTopicFilter;
+
+    /**
+     * @var int 服务质量
+     */
+    private $qualityOfService;
+
+    /**
+     * @var \Closure|null 订阅主题的回调方法
+     */
+    private $callback;
 
     /**
      * 创建一个新的订阅对象

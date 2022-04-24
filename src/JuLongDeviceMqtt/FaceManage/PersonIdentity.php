@@ -1,34 +1,39 @@
 <?php
 
-namespace JuLongDeviceHttp\FaceManage;
+declare(strict_types=1);
+
+namespace JuLongDeviceMqtt\FaceManage;
+
+use Utils\Spl\SplEnum;
 
 /**
  * 人员身份，用于名单分类
  * Created on 2021/12/28 14:22
  * Create by LZH
  */
-class PersonIdentity
+class PersonIdentity extends SplEnum
 {
+
     /**
      * 所有分类
      */
-    public const ALL = 0;
+    const ALL = 0;
     /**
      * 老师
      */
-    public const TEACHER = 1;
+    const TEACHER = 1;
     /**
      * 走读学生
      */
-    public const DAY_STUDENT = 2;
+    const DAY_STUDENT = 2;
     /**
      * 寄宿学生
      */
-    public const BOARDING_STUDENT = 3;
+    const BOARDING_STUDENT = 3;
     /**
      * 访客
      */
-    public const VISITOR  = 4;
+    const VISITOR  = 4;
 
     public static function getPersonGroupNameById(int $id) {
         $GroupNames = [
