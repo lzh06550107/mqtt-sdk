@@ -25,7 +25,7 @@ class GetPersonListRequest extends AbstractRequest
     public $PersonType;
 
     /**
-     * @var SearchCondition 搜索条件
+     * @var SearchCondition|null 搜索条件
      */
     public $SearchCondition;
 
@@ -39,12 +39,76 @@ class GetPersonListRequest extends AbstractRequest
      */
     public $NameCount;
 
-
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::GET_PERSON_LIST; // 初始化动作名称
+        $this->setAction(FaceManageAction::GET_PERSON_LIST); // 初始化动作名称
     }
+
+    /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
+     * @return SearchCondition|null
+     */
+    public function getSearchCondition(): ?SearchCondition
+    {
+        return $this->SearchCondition;
+    }
+
+    /**
+     * @param SearchCondition $SearchCondition
+     */
+    public function setSearchCondition(SearchCondition $SearchCondition): void
+    {
+        $this->SearchCondition = $SearchCondition;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPageCurNO(): int
+    {
+        return $this->PageCurNO;
+    }
+
+    /**
+     * @param int $PageCurNO
+     */
+    public function setPageCurNO(int $PageCurNO): void
+    {
+        $this->PageCurNO = $PageCurNO;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNameCount(): int
+    {
+        return $this->NameCount;
+    }
+
+    /**
+     * @param int $NameCount
+     */
+    public function setNameCount(int $NameCount): void
+    {
+        $this->NameCount = $NameCount;
+    }
+
 }

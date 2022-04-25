@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,13 +19,17 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\DeletePersonListRequest;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient = new AsyncMqttClient(null, $logger);
+
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -42,12 +47,11 @@ $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $deletePersonListRequest = new DeletePersonListRequest();
 
-$deletePersonListRequest->PersonType = 2; // 删除白名单
+$deletePersonListRequest->setPersonType(2); // 删除白名单
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $deletePersonListRequest) {
 //    while (true) {
-        $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $deletePersonListRequest, 1);
-        var_dump($response);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $deletePersonListRequest, 1);
         Coroutine::sleep(3);
 //    }
 });

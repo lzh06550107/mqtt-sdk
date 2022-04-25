@@ -34,6 +34,40 @@ class DeletePersonRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::DELETE_PERSON; // 初始化动作名称
+        $this->setAction(FaceManageAction::DELETE_PERSON); // 初始化动作名称
     }
+
+    /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersonId(): string
+    {
+        return $this->PersonId;
+    }
+
+    /**
+     * @param string $PersonId
+     */
+    public function setPersonId(string $PersonId): void
+    {
+        $this->PersonId = $PersonId;
+    }
+
+
 }

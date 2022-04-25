@@ -25,7 +25,7 @@ use Swoole\Coroutine;
 
 $syncMqttClient = new SyncMqttClient();
 
-$syncMqttClient->setBrokerHost('128.128.20.81');
+$syncMqttClient->setBrokerHost('128.128.13.90');
 $syncMqttClient->setBrokerPort(1883);
 $syncMqttClient->setKeepAlive(10);
 $syncMqttClient->setDelay(10);

@@ -16,14 +16,9 @@ use JuLongDeviceMqtt\FaceManage\FaceManageAction;
  * 批量注册人员
  * Created on 2022/2/10 11:09
  * Create by LZH
- *
- * @method  setPersonInfo(BatchAddPersonInfo[] $personInfo) 批量添加人员信息
  */
 class BatchAddPersonRequest extends AbstractRequest
 {
-
-    protected $extraProperty = ["PersonInfo"];
-
     /**
      * @var int 图片下发类型 0：URL(PersonPhotoUrl)；1：Base64(PersonPhoto)；2：特征值(FeatureValue)；3：IC卡(ICCard，人卡分离)
      */
@@ -98,6 +93,22 @@ class BatchAddPersonRequest extends AbstractRequest
     public function setPersonTotal(?int $PersonTotal): void
     {
         $this->PersonTotal = $PersonTotal;
+    }
+
+    /**
+     * @return BatchAddPersonInfo[]
+     */
+    public function getPersonInfo(): array
+    {
+        return $this->PersonInfo;
+    }
+
+    /**
+     * @param BatchAddPersonInfo[] $PersonInfo
+     */
+    public function setPersonInfo(array $PersonInfo): void
+    {
+        $this->PersonInfo = $PersonInfo;
     }
 
 }

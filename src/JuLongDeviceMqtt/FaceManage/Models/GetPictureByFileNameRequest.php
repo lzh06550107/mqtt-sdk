@@ -29,6 +29,23 @@ class GetPictureByFileNameRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::GET_PICTURE_BY_FILENAME; // 初始化动作名称
+        $this->setAction(FaceManageAction::GET_PICTURE_BY_FILENAME); // 初始化动作名称
     }
+
+    /**
+     * @return string
+     */
+    public function getPicturePath(): string
+    {
+        return $this->PicturePath;
+    }
+
+    /**
+     * @param string $PicturePath
+     */
+    public function setPicturePath(string $PicturePath): void
+    {
+        $this->PicturePath = $PicturePath;
+    }
+
 }

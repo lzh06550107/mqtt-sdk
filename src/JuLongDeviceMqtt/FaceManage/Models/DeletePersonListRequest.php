@@ -26,10 +26,26 @@ class DeletePersonListRequest extends AbstractRequest
     public $PersonType;
 
     /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::DELETE_PERSON_LIST; // 初始化动作名称
+        $this->setAction(FaceManageAction::DELETE_PERSON_LIST); // 初始化动作名称
     }
 }

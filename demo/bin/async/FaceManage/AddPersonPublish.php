@@ -70,7 +70,7 @@ $personInfo->setAddress('广东省广州市');
 $personInfo->setLimitTime(0);
 $personInfo->setStartTime('2020-09-12 09:10:00');
 $personInfo->setEndTime('2021-09-12 09:10:00');
-$personInfo->setPersonIdentity(new PersonIdentity(PersonIdentity::ALL));
+$personInfo->setPersonIdentity(PersonIdentity::ALL);
 $personInfo->setIdentityAttribute(0);
 ///////////使用图片链接开始/////////////////
 //$personInfo->setPhotoType(0);
@@ -81,6 +81,7 @@ $personInfo->setPersonPhoto( '/9j/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ
 
 $addPersonRequest->setPersonInfo($personInfo);
 
+// 测试成功
 Coroutine\run(function () use($faceManageBaseMqttClient, $addPersonRequest) {
 //    while (true) {
         $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $addPersonRequest, 1);

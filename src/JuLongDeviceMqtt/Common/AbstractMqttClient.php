@@ -321,8 +321,10 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             $this->repository->addPendingOutgoingMessage($pendingMessage);
         }
 
-        print_r('---------发布的消息内容-----------' . PHP_EOL);
+        print_r('---------发送消息内容----------' . PHP_EOL);
         print_r($message);
+        print_r(PHP_EOL);
+        file_put_contents("test.json", $message);
 
         $this->publishMessage($uuidOrTopic, $message, $qualityOfService, $retain, $messageId);
     }

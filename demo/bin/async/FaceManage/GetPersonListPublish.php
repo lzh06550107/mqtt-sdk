@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,14 +19,18 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\GetPersonListRequest;
 use JuLongDeviceMqtt\FaceManage\Models\SearchCondition;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient = new AsyncMqttClient(null, $logger);
+
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -42,30 +47,29 @@ $asyncMqttClient->setSwooleConfig([
 $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $getPersonListRequest = new GetPersonListRequest();
-$getPersonListRequest->PersonType = 2;
-$getPersonListRequest->PageCurNO = 1;
-$getPersonListRequest->NameCount = 1000;
+$getPersonListRequest->setPersonType(2);
+$getPersonListRequest->setPageCurNO(1);
+$getPersonListRequest->setNameCount(1000);
 
 $searchCondition = new SearchCondition();
-$searchCondition->SearchMethod = 0;
-$searchCondition->StartTime = '2000-01-01 00:00:00';
-$searchCondition->EndTime = '2022-12-01 00:00:00';
-$searchCondition->LimitTime = 0;
-$searchCondition->PersonIdentity = 0;
-$searchCondition->Sex = 0;
-$searchCondition->AgeRange = [
+$searchCondition->setSearchMethod(0);
+$searchCondition->setStartTime('2000-01-01 00:00:00');
+$searchCondition->setEndTime('2022-12-01 00:00:00');
+$searchCondition->setLimitTime(0);
+$searchCondition->setPersonIdentity(0);
+$searchCondition->setSex(0);
+$searchCondition->setAgeRange([
     0,
     100
-];
+]);
 //$searchCondition->SearchMethod = 1;
 //$searchCondition->Name = 'test';
 
-$getPersonListRequest->SearchCondition = $searchCondition;
+$getPersonListRequest->setSearchCondition($searchCondition);
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $getPersonListRequest) {
 //    while (true) {
-        $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPersonListRequest, 1);
-        var_dump($response);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPersonListRequest, 1);
         Coroutine::sleep(3);
 //    }
 });

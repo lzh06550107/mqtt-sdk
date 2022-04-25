@@ -22,7 +22,7 @@ foreach (
     }
 }
 
-AsyncMqttClient::configurator()->setBrokerHost('128.128.20.81')->setBrokerPort(1883)
+AsyncMqttClient::configurator()->setBrokerHost('128.128.13.90')->setBrokerPort(1883)
     ->setKeepAlive(10)->setDelay(10)->setMaxAttempts(3)->setSwooleConfig([
         'open_mqtt_protocol' => true,
         'package_max_length' => 2 * 1024 * 1024,

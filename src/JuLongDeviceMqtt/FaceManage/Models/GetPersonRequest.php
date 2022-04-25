@@ -30,22 +30,22 @@ class GetPersonRequest extends AbstractRequest
     public $SearchType;
 
     /**
-     * @var int 相似度阈值，返回大于等于该阈值的人脸，SearchType不为2时必填
+     * @var int|null 相似度阈值，返回大于等于该阈值的人脸，SearchType不为2时必填
      */
     public $Similarity;
 
     /**
-     * @var string 人脸图片(Base64)，SearchType等于0
+     * @var string|null 人脸图片(Base64)，SearchType等于0
      */
     public $FacePicture;
 
     /**
-     * @var string 人员特征值数据(Base64，不可转换为图片)，SearchType等于1
+     * @var string|null 人员特征值数据(Base64，不可转换为图片)，SearchType等于1
      */
     public $FeatureValue;
 
     /**
-     * @var string 人员入库时的ID，SearchType等于2
+     * @var string|null 人员入库时的ID，SearchType等于2
      */
     public $PersonId;
 
@@ -54,8 +54,103 @@ class GetPersonRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::GET_PERSON; // 初始化动作名称
+        $this->setAction(FaceManageAction::GET_PERSON); // 初始化动作名称
     }
 
+    /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSearchType(): int
+    {
+        return $this->SearchType;
+    }
+
+    /**
+     * @param int $SearchType
+     */
+    public function setSearchType(int $SearchType): void
+    {
+        $this->SearchType = $SearchType;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getSimilarity(): ?int
+    {
+        return $this->Similarity;
+    }
+
+    /**
+     * @param int|null $Similarity
+     */
+    public function setSimilarity(?int $Similarity): void
+    {
+        $this->Similarity = $Similarity;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFacePicture(): ?string
+    {
+        return $this->FacePicture;
+    }
+
+    /**
+     * @param string|null $FacePicture
+     */
+    public function setFacePicture(?string $FacePicture): void
+    {
+        $this->FacePicture = $FacePicture;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFeatureValue(): ?string
+    {
+        return $this->FeatureValue;
+    }
+
+    /**
+     * @param string|null $FeatureValue
+     */
+    public function setFeatureValue(?string $FeatureValue): void
+    {
+        $this->FeatureValue = $FeatureValue;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPersonId(): ?string
+    {
+        return $this->PersonId;
+    }
+
+    /**
+     * @param string|null $PersonId
+     */
+    public function setPersonId(?string $PersonId): void
+    {
+        $this->PersonId = $PersonId;
+    }
 
 }

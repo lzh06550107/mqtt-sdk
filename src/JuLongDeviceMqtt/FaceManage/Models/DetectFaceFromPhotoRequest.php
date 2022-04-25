@@ -30,6 +30,24 @@ class DetectFaceFromPhotoRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::DETECT_FACE_FROM_PHOTO; // 初始化动作名称
+        $this->setAction(FaceManageAction::DETECT_FACE_FROM_PHOTO); // 初始化动作名称
     }
+
+    /**
+     * @return string
+     */
+    public function getPersonPhoto(): string
+    {
+        return $this->PersonPhoto;
+    }
+
+    /**
+     * @param string $PersonPhoto
+     */
+    public function setPersonPhoto(string $PersonPhoto): void
+    {
+        $this->PersonPhoto = $PersonPhoto;
+    }
+
+
 }

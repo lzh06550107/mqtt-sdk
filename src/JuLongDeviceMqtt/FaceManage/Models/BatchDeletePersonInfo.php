@@ -27,4 +27,37 @@ class BatchDeletePersonInfo extends AbstractModel
      * @var string 人员ID
      */
     public $PersonId;
+
+    /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersonId(): string
+    {
+        return $this->PersonId;
+    }
+
+    /**
+     * @param string $PersonId
+     */
+    public function setPersonId(string $PersonId): void
+    {
+        $this->PersonId = $PersonId;
+    }
+
 }

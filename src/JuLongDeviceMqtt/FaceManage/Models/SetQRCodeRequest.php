@@ -30,12 +30,12 @@ class SetQRCodeRequest extends AbstractRequest
     public $PictureFormat;
 
     /**
-     * @var string 二维码下载地址
+     * @var string|null 二维码下载地址
      */
     public $QRCodeUrl;
 
     /**
-     * @var string 二维码图片（Base64）
+     * @var string|null 二维码图片（Base64）
      */
     public $QRCodePicture;
 
@@ -44,6 +44,72 @@ class SetQRCodeRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::SET_QRCODE; // 初始化动作名称
+        $this->setAction(FaceManageAction::SET_QRCODE); // 初始化动作名称
     }
+
+    /**
+     * @return int
+     */
+    public function getPictureType(): int
+    {
+        return $this->PictureType;
+    }
+
+    /**
+     * @param int $PictureType
+     */
+    public function setPictureType(int $PictureType): void
+    {
+        $this->PictureType = $PictureType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPictureFormat(): int
+    {
+        return $this->PictureFormat;
+    }
+
+    /**
+     * @param int $PictureFormat
+     */
+    public function setPictureFormat(int $PictureFormat): void
+    {
+        $this->PictureFormat = $PictureFormat;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getQRCodeUrl(): ?string
+    {
+        return $this->QRCodeUrl;
+    }
+
+    /**
+     * @param string|null $QRCodeUrl
+     */
+    public function setQRCodeUrl(?string $QRCodeUrl): void
+    {
+        $this->QRCodeUrl = $QRCodeUrl;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getQRCodePicture(): ?string
+    {
+        return $this->QRCodePicture;
+    }
+
+    /**
+     * @param string|null $QRCodePicture
+     */
+    public function setQRCodePicture(?string $QRCodePicture): void
+    {
+        $this->QRCodePicture = $QRCodePicture;
+    }
+
+
 }

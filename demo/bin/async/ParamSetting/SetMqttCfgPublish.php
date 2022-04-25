@@ -25,7 +25,7 @@ use Swoole\Coroutine;
 
 $asyncMqttClient = new AsyncMqttClient();
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -44,7 +44,7 @@ $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 $setMqttCfgRequest = new SetMqttCfgRequest();
 $mqttCfg = new MqttCfg();
 $mqttCfg->MqttEnabled = 1;
-$mqttCfg->MqttAddress = "128.128.20.81";
+$mqttCfg->MqttAddress = "128.128.13.90";
 $mqttCfg->MqttPort = 1883;
 $mqttCfg->MqttUsername = "";
 $mqttCfg->MqttPassword = "";

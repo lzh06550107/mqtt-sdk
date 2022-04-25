@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,15 +19,18 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\BatchDeletePersonInfo;
 use JuLongDeviceMqtt\FaceManage\Models\BatchDeletePersonRequest;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
 
+$asyncMqttClient = new AsyncMqttClient(null, $logger);
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -45,14 +49,14 @@ $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 $batchDeletePersonRequest = new BatchDeletePersonRequest();
 
 $batchDeletePersonInfo = new BatchDeletePersonInfo();
-$batchDeletePersonInfo->PersonType = 2; // 白名单
-$batchDeletePersonInfo->PersonId = '1';
-$batchDeletePersonRequest->PersonInfo = [$batchDeletePersonInfo];
+$batchDeletePersonInfo->setPersonType(2); // 白名单
+$batchDeletePersonInfo->setPersonId('1');
+$batchDeletePersonRequest->setPersonInfo([$batchDeletePersonInfo]);
 
+// TaskID 字段值不能加下划线
 Coroutine\run(function () use ($faceManageBaseMqttClient, $batchDeletePersonRequest) {
 //    while (true) {
-    $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest, 1);
-    var_dump($response);
+    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest);
     Coroutine::sleep(3);
 //    }
 });

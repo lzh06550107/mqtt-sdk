@@ -19,6 +19,14 @@ use ReflectionMethod;
  */
 abstract class AbstractModel
 {
+    /**
+     * @var string[] 额外允许的属性
+     */
+    protected $extraAllowProperty = ["PersonInfo"];
+    /**
+     * @var array 收集的值
+     */
+    protected $extraArrayProperty = [];
 
     /**
      * 内部实现，用户禁止调用
@@ -59,7 +67,7 @@ abstract class AbstractModel
             $value = $setMethod->invoke($obj); // 获取属性值
 
             if ($propertyName === 'TaskID' && $value === null) { // 如果属性名称是 TaskID 且该值为空，则自动生成一个
-                $memberRet[$propertyName] = uniqid('taskid_');
+                $memberRet[$propertyName] = uniqid('taskid');
             }
 
             if ($value === null) {
@@ -75,8 +83,11 @@ abstract class AbstractModel
             }
         }
 
-        if ($obj instanceof AbstractRequest && $obj->_dynamicPropertyArray) { // 请求类存在非空额外属性值，则需要收集
-            foreach ($obj->_dynamicPropertyArray as $propertyName => $propertyValue) {
+//        print_r('-------打印动态属性----------' . PHP_EOL);
+//        print_r($obj);
+
+        if (!($obj instanceof AbstractResponse) && $obj->extraArrayProperty) { // 请求类存在非空额外属性值，则需要收集
+            foreach ($obj->extraArrayProperty as $propertyName => $propertyValue) {
                 $memberRet[$propertyName] = $propertyValue;
             }
         }
@@ -180,13 +191,18 @@ abstract class AbstractModel
      */
     public function __call($member, $param)
     {
-        $act = substr($member,0,3);
-        $attr = substr($member,3);
-        if ($act === "get") {
-            return $this->$attr;
-        } else if ($act === "set") {
-            $this->$attr = $param[0];
+//        $act = substr($member,0,3);
+//        $attr = substr($member,3);
+//        if ($act === "get") {
+//            return $this->$attr;
+//        } else if ($act === "set") {
+//            $this->$attr = $param[0];
+//        }
+
+        if (in_array(substr($member,3), $this->extraAllowProperty)) {
+            $this->collectionProperty($param[0], $this->extraArrayProperty);
         }
+
     }
 
     public function __toString() {
@@ -224,5 +240,35 @@ abstract class AbstractModel
             }
         }
 
+    }
+
+    /**
+     * @param $objectOrClass
+     * @param array $_extraProperty
+     * @param null $key 有值，则表示数组，否则是对象
+     * @throws \ReflectionException
+     * @author LZH
+     * @since 2022/04/24
+     */
+    private function collectionProperty($objectOrClass, array &$_extraProperty): void
+    {
+
+        $reflectionClassObj = new ReflectionClass($objectOrClass); // 第一个参数对象
+        $allPublicMethods = $reflectionClassObj->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        $allGetMethods = [];
+        foreach ($allPublicMethods as $publicMethod) {
+            $methodName = substr($publicMethod->name, 3);
+            if (str_starts_with($publicMethod->name, 'get')) {
+                $allGetMethods[$methodName] = $publicMethod;
+            }
+        }
+
+        foreach ($allGetMethods as $propertyName => $setMethod) {
+            $value = $setMethod->invoke($objectOrClass);
+            if ($value) { // 收集非空值
+                $_extraProperty[$propertyName] = $value; // 收集所有属性和值
+            }
+        }
     }
 }

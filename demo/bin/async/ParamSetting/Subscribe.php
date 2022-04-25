@@ -31,7 +31,7 @@ Coroutine\run(function () {
 
     $asyncMqttClient = new AsyncMqttClient();
 
-    $asyncMqttClient->setBrokerHost('128.128.20.81');
+    $asyncMqttClient->setBrokerHost('128.128.13.90');
     $asyncMqttClient->setBrokerPort(1883);
     $asyncMqttClient->setKeepAlive(60);
     $asyncMqttClient->setDelay(10);

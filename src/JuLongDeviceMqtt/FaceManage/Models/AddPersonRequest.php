@@ -24,7 +24,7 @@ use ReflectionMethod;
 class AddPersonRequest extends AbstractRequest
 {
 
-    protected $extraProperty = ["PersonInfo"];
+    protected $extraAllowProperty = ["PersonInfo"];
 
     /**
      * @var int 是否覆盖人员(通过PersonId覆盖) 0：不覆盖；1：覆盖

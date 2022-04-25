@@ -30,6 +30,24 @@ class GetFeatureValueRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::GET_FEATURE_VALUE; // 初始化动作名称
+        $this->setAction(FaceManageAction::GET_FEATURE_VALUE); // 初始化动作名称
     }
+
+    /**
+     * @return string
+     */
+    public function getFacePicture(): string
+    {
+        return $this->FacePicture;
+    }
+
+    /**
+     * @param string $FacePicture
+     */
+    public function setFacePicture(string $FacePicture): void
+    {
+        $this->FacePicture = $FacePicture;
+    }
+
+
 }

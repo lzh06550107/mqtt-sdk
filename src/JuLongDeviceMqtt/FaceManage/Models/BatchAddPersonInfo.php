@@ -20,7 +20,7 @@ use JuLongDeviceMqtt\Common\AbstractModel;
  */
 class BatchAddPersonInfo extends AbstractModel
 {
-    protected $extraProperty = ["PersonInfo"];
+    protected $extraAllowProperty = ["PersonInfo"];
 
     /**
      * @var int|null 是否编辑人员（通过PersonId编辑） 0：入库；1：编辑

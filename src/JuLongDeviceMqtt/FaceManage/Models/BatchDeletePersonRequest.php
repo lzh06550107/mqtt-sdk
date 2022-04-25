@@ -22,13 +22,29 @@ class BatchDeletePersonRequest extends AbstractRequest
     /**
      * @var BatchDeletePersonInfo[] 批量删除人员信息列表
      */
-    public $PersonInfo;
+    private $PersonInfo;
+
+    /**
+     * @return BatchDeletePersonInfo[]
+     */
+    public function getPersonInfo(): array
+    {
+        return $this->PersonInfo;
+    }
+
+    /**
+     * @param BatchDeletePersonInfo[] $PersonInfo
+     */
+    public function setPersonInfo(array $PersonInfo): void
+    {
+        $this->PersonInfo = $PersonInfo;
+    }
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = FaceManageAction::DELETE_PERSONS; // 初始化动作名称
+        $this->setAction(FaceManageAction::DELETE_PERSONS); // 初始化动作名称
     }
 }

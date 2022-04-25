@@ -3,15 +3,12 @@
 declare(strict_types=1);
 
 namespace JuLongDeviceMqtt\FaceManage;
-
-use Utils\Spl\SplEnum;
-
 /**
  * 人员身份，用于名单分类
  * Created on 2021/12/28 14:22
  * Create by LZH
  */
-class PersonIdentity extends SplEnum
+class PersonIdentity
 {
 
     /**

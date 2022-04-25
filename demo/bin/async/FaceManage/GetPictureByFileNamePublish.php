@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,13 +19,17 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\Models\GetPictureByFileNameRequest;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient->setBrokerHost('128.128.20.81');
+$asyncMqttClient = new AsyncMqttClient(null, $logger);
+
+$asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
 $asyncMqttClient->setKeepAlive(10);
 $asyncMqttClient->setDelay(10);
@@ -41,12 +46,11 @@ $asyncMqttClient->setSwooleConfig([
 $faceManageBaseMqttClient = new AsyncFaceManageMqttClient($asyncMqttClient);
 
 $getPictureByFileNameRequest = new GetPictureByFileNameRequest();
-$getPictureByFileNameRequest->PicturePath = ''; // TODO 如何获取图片路径
+$getPictureByFileNameRequest->setPicturePath('/sd/data/Allsnappath/0/FACE_11000018_20220309T164455559_3.jpg');
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $getPictureByFileNameRequest) {
 //    while (true) {
-    $response = $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPictureByFileNameRequest, 1);
-    var_dump($response);
+    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPictureByFileNameRequest, 1);
     Coroutine::sleep(3);
 //    }
 });

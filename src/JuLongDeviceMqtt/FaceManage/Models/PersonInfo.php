@@ -75,7 +75,7 @@ class PersonInfo extends AbstractModel
     private $EndTime;
 
     /**
-     * @var PersonIdentity|null 人员身份，用于名单分类
+     * @var int|null 人员身份，用于名单分类
      */
     private $PersonIdentity;
 
@@ -331,17 +331,17 @@ class PersonInfo extends AbstractModel
     }
 
     /**
-     * @return PersonIdentity|null
+     * @return int|null
      */
-    public function getPersonIdentity(): ?PersonIdentity
+    public function getPersonIdentity(): ?int
     {
         return $this->PersonIdentity;
     }
 
     /**
-     * @param PersonIdentity|null $PersonIdentity
+     * @param int|null $PersonIdentity
      */
-    public function setPersonIdentity(?PersonIdentity $PersonIdentity): void
+    public function setPersonIdentity(?int $PersonIdentity): void
     {
         $this->PersonIdentity = $PersonIdentity;
     }
@@ -443,9 +443,9 @@ class PersonInfo extends AbstractModel
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getPhotoType(): int
+    public function getPhotoType(): ?int
     {
         return $this->PhotoType;
     }
