@@ -18,8 +18,8 @@ use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
  * Created on 2022/1/20 9:05
  * Create by LZH
  *
- * @method static SyncFaceManageMqttClient getSyncFaceManageMqttClient(bool $asyncOrSync) 人脸管理同步客户端
- * @method static SyncParamSettingMqttClient getSyncParamSettingMqttClient(bool $asyncOrSync) 设备参数管理同步客户端
+ * @method static SyncFaceManageMqttClient getSyncFaceManageMqttClient() 人脸管理同步客户端
+ * @method static SyncParamSettingMqttClient getSyncParamSettingMqttClient() 设备参数管理同步客户端
  * @method string request($uuidOrTopic, AbstractRequest $request) 发送同步请求
  */
 class SyncMqttClient

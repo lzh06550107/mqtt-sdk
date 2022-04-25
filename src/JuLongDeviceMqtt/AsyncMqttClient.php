@@ -17,8 +17,8 @@ use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
  * Created on 2022/1/20 9:05
  * Create by LZH
  *
- * @method static AsyncFaceManageMqttClient getAsyncFaceManageMqttClient(bool $asyncOrSync) 人脸管理异步客户端
- * @method static AsyncParamSettingMqttClient getAsyncParamSettingMqttClient(bool $asyncOrSync) 设备参数管理异步客户端
+ * @method static AsyncFaceManageMqttClient asyncFaceManageMqttClient() 人脸管理异步客户端
+ * @method static AsyncParamSettingMqttClient asyncParamSettingMqttClient() 设备参数管理异步客户端
  */
 class AsyncMqttClient
 {
@@ -30,7 +30,10 @@ class AsyncMqttClient
         'AsyncParamSettingMqttClient',
     ];
 
-    private static MqttClientBuilder $mqttClientBuilder;
+    /**
+     * @var MqttClientBuilder
+     */
+    private static $mqttClientBuilder;
 
     public static function configurator(): MqttClientBuilder
     {
@@ -42,8 +45,9 @@ class AsyncMqttClient
      */
     public static function __callStatic($name, $arguments) {
 
-        if (in_array(strtoupper($name), self::$method)) {
-            call_user_func_array([self::$mqttClientBuilder,'get'. strtoupper($name)], $arguments);
+        if (in_array(ucfirst($name), self::$method)) {
+            print_r('get' . ucfirst($name));
+            return call_user_func_array([self::$mqttClientBuilder,'get'. ucfirst($name)], $arguments);
         } else {
             throw new \Exception('方法不存在');
         }

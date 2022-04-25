@@ -9,10 +9,13 @@ declare(strict_types=1);
 
 namespace JuLongDeviceMqtt;
 
+use JuLongDeviceMqtt\Common\AbstractMqttClient;
 use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
 use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
+use ReflectionClass;
+use ReflectionMethod;
 use Simps\MQTT\Config\ClientConfig;
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
 use JuLongDeviceMqtt\Common\SyncMqttClient;
@@ -69,39 +72,75 @@ final class MqttClientBuilder extends ClientConfig
     }
 
     /**
-     * 获取人脸管理客户端
-     * @param bool $asyncOrSync 异步客户端还是同步客户端
+     * 获取人脸管理同步客户端
+     * @return SyncFaceManageMqttClient
      * @author LZH
-     * @since 2022/04/11
+     * @since 2022/04/25
      */
-    public function getFaceManageMqttClient(bool $asyncOrSync = true)
+    public function getSyncFaceManageMqttClient() : SyncFaceManageMqttClient
     {
-        if ($asyncOrSync) {
-            $asyncMqttClient = new AsyncMqttClient();
-            return new AsyncFaceManageMqttClient($asyncMqttClient);
-        } else {
-            $syncMqttClient = new SyncMqttClient();
-            return new SyncFaceManageMqttClient($syncMqttClient);
-        }
-
+        $syncMqttClient = new SyncMqttClient();
+        $this->copyValue($syncMqttClient);
+        return new SyncFaceManageMqttClient($syncMqttClient);
     }
 
     /**
-     * 获取参数设置客户端
-     * @param bool $asyncOrSync 异步客户端还是同步客户端
+     * 获取人脸管理异步客户端
+     * @return AsyncFaceManageMqttClient
      * @author LZH
-     * @since 2022/04/11
+     * @since 2022/04/25
      */
-    public function getParamSettingMqttClient(bool $asyncOrSync = true)
+    public function getAsyncFaceManageMqttClient() : AsyncFaceManageMqttClient
     {
-        if ($asyncOrSync) {
-            $asyncMqttClient = new AsyncMqttClient();
-            return new AsyncParamSettingMqttClient($asyncMqttClient);
-        } else {
-            $syncMqttClient = new SyncMqttClient();
-            return new SyncParamSettingMqttClient($syncMqttClient);
-        }
+        $asyncMqttClient = new AsyncMqttClient();
+        $this->copyValue($asyncMqttClient);
+        return new AsyncFaceManageMqttClient($asyncMqttClient);
+    }
 
+    /**
+     * 获取参数设置同步客户端
+     * @return SyncParamSettingMqttClient
+     * @author LZH
+     * @since 2022/04/25
+     */
+    public function getSyncParamSettingMqttClient() : SyncParamSettingMqttClient
+    {
+        $syncMqttClient = new SyncMqttClient();
+        $this->copyValue($syncMqttClient);
+        return new SyncParamSettingMqttClient($syncMqttClient);
+    }
+
+    /**
+     * 获取参数设置异步客户端
+     * @return AsyncParamSettingMqttClient
+     * @author LZH
+     * @since 2022/04/25
+     */
+    public function getAsyncParamSettingMqttClient() : AsyncParamSettingMqttClient
+    {
+        $asyncMqttClient = new AsyncMqttClient();
+        $this->copyValue($asyncMqttClient);
+        return new AsyncParamSettingMqttClient($asyncMqttClient);
+    }
+
+    /**
+     * 复制构建器的值给客户端
+     * @author LZH
+     * @since 2022/04/25
+     */
+    private function copyValue(AbstractMqttClient $mqttClient) : void
+    {
+        $reflectionClassObj = new ReflectionClass($this); // 第一个参数对象
+        $allPublicMethods = $reflectionClassObj->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        $reflectionClientObj = new ReflectionClass($mqttClient);
+        $clientAllPublicMethods = array_column($reflectionClientObj->getMethods(ReflectionMethod::IS_PUBLIC), 'name');
+        foreach ($allPublicMethods as $publicMethod) {
+            $methodName = substr($publicMethod->name, 3);
+            if (str_starts_with($publicMethod->name, 'get') && in_array($publicMethod->name, $clientAllPublicMethods)) {
+                $mqttClient->{'set' . $methodName}($publicMethod->invoke($this));
+            }
+        }
     }
 
 }
