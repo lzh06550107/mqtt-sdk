@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,12 +19,16 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\DeviceCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\SetDeviceInfoRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -44,10 +49,10 @@ $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 $setDeviceInfoRequest = new SetDeviceInfoRequest();
 
 $deviceCfg = new DeviceCfg();
-$deviceCfg->VideoFormat = 1;
-$deviceCfg->DeviceLanguage = 1;
+$deviceCfg->setVideoFormat(1);
+$deviceCfg->setDeviceLanguage(1);
 
-$setDeviceInfoRequest->DeviceCfg = $deviceCfg;
+$setDeviceInfoRequest->setDeviceCfg($deviceCfg);
 
 // TODO 测试未通过
 Coroutine\run(function () use($paramSettingMqttClient, $setDeviceInfoRequest) {

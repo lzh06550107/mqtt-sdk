@@ -19,42 +19,170 @@ class DeviceInfo extends DeviceCfg
     /**
      * @var string 设备ID(出厂自带)
      */
-    public $DeviceId;
+    private $DeviceId;
 
     /**
      * @var string 设备mac地址
      */
-    public $DeviceMac;
+    private $DeviceMac;
 
     /**
      * @var string 设备IP地址
      */
-    public $DeviceIp;
+    private $DeviceIp;
 
     /**
      * @var string 设备内核版本
      */
-    public $CoreVersion;
+    private $CoreVersion;
 
     /**
      * @var string 版本日期 格式：Aug 09 2020 18:12:01
      */
-    public $VersionDate;
+    private $VersionDate;
 
     /**
      * @var string 设备页面版本
      */
-    public $WebVersion;
+    private $WebVersion;
 
     /**
      * @var string 设备HTTP版本
      */
-    public $HttpVersion;
+    private $HttpVersion;
 
     /**
      * @var string MQTT版本
      */
-    public $MQTTVersion;
+    private $MQTTVersion;
+
+    /**
+     * @return string
+     */
+    public function getDeviceId(): string
+    {
+        return $this->DeviceId;
+    }
+
+    /**
+     * @param string $DeviceId
+     */
+    public function setDeviceId(string $DeviceId): void
+    {
+        $this->DeviceId = $DeviceId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeviceMac(): string
+    {
+        return $this->DeviceMac;
+    }
+
+    /**
+     * @param string $DeviceMac
+     */
+    public function setDeviceMac(string $DeviceMac): void
+    {
+        $this->DeviceMac = $DeviceMac;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeviceIp(): string
+    {
+        return $this->DeviceIp;
+    }
+
+    /**
+     * @param string $DeviceIp
+     */
+    public function setDeviceIp(string $DeviceIp): void
+    {
+        $this->DeviceIp = $DeviceIp;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCoreVersion(): string
+    {
+        return $this->CoreVersion;
+    }
+
+    /**
+     * @param string $CoreVersion
+     */
+    public function setCoreVersion(string $CoreVersion): void
+    {
+        $this->CoreVersion = $CoreVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersionDate(): string
+    {
+        return $this->VersionDate;
+    }
+
+    /**
+     * @param string $VersionDate
+     */
+    public function setVersionDate(string $VersionDate): void
+    {
+        $this->VersionDate = $VersionDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebVersion(): string
+    {
+        return $this->WebVersion;
+    }
+
+    /**
+     * @param string $WebVersion
+     */
+    public function setWebVersion(string $WebVersion): void
+    {
+        $this->WebVersion = $WebVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpVersion(): string
+    {
+        return $this->HttpVersion;
+    }
+
+    /**
+     * @param string $HttpVersion
+     */
+    public function setHttpVersion(string $HttpVersion): void
+    {
+        $this->HttpVersion = $HttpVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMQTTVersion(): string
+    {
+        return $this->MQTTVersion;
+    }
+
+    /**
+     * @param string $MQTTVersion
+     */
+    public function setMQTTVersion(string $MQTTVersion): void
+    {
+        $this->MQTTVersion = $MQTTVersion;
+    }
 
     public function deserialize($param)
     {

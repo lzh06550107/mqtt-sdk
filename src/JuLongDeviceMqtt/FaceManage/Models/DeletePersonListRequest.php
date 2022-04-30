@@ -23,7 +23,7 @@ class DeletePersonListRequest extends AbstractRequest
     /**
      * @var int 名单类型 0：所有名单(门禁机支持)；1：黑名单；2：白名单；3：VIP名单
      */
-    public $PersonType;
+    private $PersonType;
 
     /**
      * @return int

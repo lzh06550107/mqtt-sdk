@@ -9,6 +9,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -19,6 +20,7 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\CaptureModeParam;
 use JuLongDeviceMqtt\ParamSetting\Models\FaceCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\PictureCompression;
@@ -26,9 +28,12 @@ use JuLongDeviceMqtt\ParamSetting\Models\PicturePrefix;
 use JuLongDeviceMqtt\ParamSetting\Models\SetFaceCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\Models\TimeTable;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -47,65 +52,64 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $setFaceCfgRequest = new SetFaceCfgRequest();
-$setFaceCfgRequest->ChannelNo = 0;
+$setFaceCfgRequest->setChannelNo(0);
 
 $faceCfg = new FaceCfg();
-$faceCfg->FaceEnabled = 1;
-$faceCfg->Sensitivity = 8;
-$faceCfg->CaptureMode = 0;
+$faceCfg->setFaceEnabled(1);
+$faceCfg->setSensitivity(8);
+$faceCfg->setCaptureMode(0);
 
 $captureModeParam = new CaptureModeParam();
-$captureModeParam->MaxCaptureTimes = 1;
+$captureModeParam->setMaxCaptureTimes(1);
 
-$faceCfg->CaptureModeParam = $captureModeParam;
+$faceCfg->setCaptureModeParam($captureModeParam);
 
-$faceCfg->MaxFaceSize = 300;
-$faceCfg->MinFaceSize = 30;
-$faceCfg->FaceAreaSize = 3;
-$faceCfg->MinFaceTempSize = 200;
-$faceCfg->SceneMode = 0;
-$faceCfg->FaceTrackEnabled = 1;
-$faceCfg->FTPUploadEnabled = 0;
-$faceCfg->PrivateProtocol = 0;
-$faceCfg->PictureMode = 2;
-$faceCfg->FacePictureQuality = 99;
-$faceCfg->ScenePictureQuality = 99;
+$faceCfg->setMaxFaceSize(300);
+$faceCfg->setMinFaceSize(30);
+$faceCfg->setFaceAreaSize(3);
+$faceCfg->setMinFaceTempSize(200);
+$faceCfg->setSceneMode(0);
+$faceCfg->setFaceTrackEnabled(1);
+$faceCfg->setFTPUploadEnabled(0);
+$faceCfg->setPrivateProtocol(0);
+$faceCfg->setPictureMode(2);
+$faceCfg->setFacePictureQuality(99);
+$faceCfg->setScenePictureQuality(99);
 
 $picturePrefix = new PicturePrefix();
-$picturePrefix->PictureEnabled = 0;
-$picturePrefix->CustomPrefix = "TEST";
+$picturePrefix->setPictureEnabled(0);
+$picturePrefix->setCustomPrefix("TEST");
 
-$faceCfg->PicturePrefix = $picturePrefix;
+$faceCfg->setPicturePrefix($picturePrefix);
 
-$faceCfg->FaceAttributeEnabled = 1;
-$faceCfg->HumanDetection = 1;
-$faceCfg->HumanThreshold = 60;
-$faceCfg->DetectionPriority = 1;
+$faceCfg->setFaceAttributeEnabled(1);
+$faceCfg->setHumanDetection(1);
+$faceCfg->setHumanThreshold(60);
+$faceCfg->setDetectionPriority(1);
 
 $pictureCompression = new PictureCompression();
-$pictureCompression->CompressionEnabled = 0;
-$pictureCompression->CompressionSize = 320;
+$pictureCompression->setCompressionEnabled(0);
+$pictureCompression->setCompressionSize(320);
 
-$faceCfg->PictureCompression = $pictureCompression;
+$faceCfg->setPictureCompression($pictureCompression);
 
 $timeTable1 = new TimeTable();
-$timeTable1->TimeEnable = 1;
-$timeTable1->TimeBegin = "00:00:01";
-$timeTable1->TimeEnd = "23:59:01";
+$timeTable1->setTimeEnable(1);
+$timeTable1->setTimeBegin("00:00:01");
+$timeTable1->setTimeEnd("23:59:01");
 
 $timeTable2 = new TimeTable();
-$timeTable2->TimeEnable = 1;
-$timeTable2->TimeBegin = "00:00:02";
-$timeTable2->TimeEnd = "23:59:02";
+$timeTable2->setTimeEnable(1);
+$timeTable2->setTimeBegin("00:00:02");
+$timeTable2->setTimeEnd("23:59:02");
 
-$faceCfg->TimeTable = [$timeTable1, $timeTable2];
+$faceCfg->setTimeTable([$timeTable1, $timeTable2]);
 
 $setFaceCfgRequest->FaceCfg = $faceCfg;
 
 Coroutine\run(function () use ($paramSettingMqttClient, $setFaceCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setFaceCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setFaceCfgRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

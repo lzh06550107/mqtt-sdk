@@ -23,7 +23,7 @@ class DetectFaceFromPhotoRequest extends AbstractRequest
     /**
      * @var string 人员照片（Base64编码）
      */
-    public $PersonPhoto;
+    private $PersonPhoto;
 
     /**
      * 构造函数

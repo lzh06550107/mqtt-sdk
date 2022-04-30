@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,11 +19,15 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\RestoreRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -41,13 +46,12 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $restoreRequest = new RestoreRequest();
-$restoreRequest->NetworkReset = 0;
-$restoreRequest->AccountReset = 0;
+$restoreRequest->setNetworkReset(0);
+$restoreRequest->setAccountReset(0);
 
 Coroutine\run(function () use($paramSettingMqttClient, $restoreRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $restoreRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $restoreRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

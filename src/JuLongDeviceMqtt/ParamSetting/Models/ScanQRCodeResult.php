@@ -30,18 +30,50 @@ class ScanQRCodeResult extends AbstractRequest
     5:访客无权限通行(语音提示)
     6:系统繁忙(语音提示)
      */
-    public $PassStatus;
+    private $PassStatus;
 
     /**
      * @var string 二维码数据
      */
-    public $QRCodeData;
+    private $QRCodeData;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SCAN_ORCODE; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SCAN_ORCODE); // 初始化动作名称
+    }
+
+    /**
+     * @return int
+     */
+    public function getPassStatus(): int
+    {
+        return $this->PassStatus;
+    }
+
+    /**
+     * @param int $PassStatus
+     */
+    public function setPassStatus(int $PassStatus): void
+    {
+        $this->PassStatus = $PassStatus;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQRCodeData(): string
+    {
+        return $this->QRCodeData;
+    }
+
+    /**
+     * @param string $QRCodeData
+     */
+    public function setQRCodeData(string $QRCodeData): void
+    {
+        $this->QRCodeData = $QRCodeData;
     }
 }

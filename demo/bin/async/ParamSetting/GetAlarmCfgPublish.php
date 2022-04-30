@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,11 +19,15 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\GetAlarmCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -41,12 +46,11 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $getAlarmCfgRequest = new GetAlarmCfgRequest();
-$getAlarmCfgRequest->ChannelNo = 0;
+$getAlarmCfgRequest->setChannelNo(0);
 
 Coroutine\run(function () use($paramSettingMqttClient, $getAlarmCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getAlarmCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getAlarmCfgRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

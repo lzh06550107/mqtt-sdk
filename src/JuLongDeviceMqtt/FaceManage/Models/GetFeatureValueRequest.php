@@ -23,7 +23,7 @@ class GetFeatureValueRequest extends AbstractRequest
     /**
      * @var string 人脸图片(Base64)
      */
-    public $FacePicture;
+    private $FacePicture;
 
     /**
      * 构造函数

@@ -17,7 +17,7 @@ use JuLongDeviceMqtt\ParamSetting\ParamSettingAction;
  * Created on 2022/2/15 10:08
  * Create by LZH
  *
- * @property AudioCfg $AudioCfg 音频参数配置类
+ * @method setAudioCfg(AudioCfg $AudioCfg) 音频参数配置类
  */
 class SetAudioCfgRequest extends AbstractRequest
 {
@@ -26,7 +26,7 @@ class SetAudioCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_AUDIO_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_AUDIO_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用

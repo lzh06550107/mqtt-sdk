@@ -16,7 +16,24 @@ class getFaceSimilarityResponse extends AbstractResponse
     /**
      * @var int 相似度阈值
      */
-    public $Similarity;
+    private $Similarity;
+
+    /**
+     * @return int
+     */
+    public function getSimilarity(): int
+    {
+        return $this->Similarity;
+    }
+
+    /**
+     * @param int $Similarity
+     */
+    public function setSimilarity(int $Similarity): void
+    {
+        $this->Similarity = $Similarity;
+    }
+
 
     public function deserialize($param) {
 

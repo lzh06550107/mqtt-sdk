@@ -16,7 +16,23 @@ class BatchDeletePersonResponse extends AbstractResponse
     /**
      * @var BatchAddPersonResponseInfo[] 批量删除人员信息
      */
-    public $PersonInfo;
+    private $PersonInfo;
+
+    /**
+     * @return BatchAddPersonResponseInfo[]
+     */
+    public function getPersonInfo(): array
+    {
+        return $this->PersonInfo;
+    }
+
+    /**
+     * @param BatchAddPersonResponseInfo[] $PersonInfo
+     */
+    public function setPersonInfo(array $PersonInfo): void
+    {
+        $this->PersonInfo = $PersonInfo;
+    }
 
     public function deserialize($param)
     {

@@ -24,6 +24,6 @@ class GetMqttCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::GET_MQTT_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::GET_MQTT_CFG); // 初始化动作名称
     }
 }

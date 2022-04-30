@@ -22,24 +22,73 @@ class GetCaptureSumRequest extends AbstractRequest
     /**
      * @var int 通道号(NVR服务器需要用到，不填默认0，该通道号对应前端IPC)
      */
-    public $ChannelNo;
+    private $ChannelNo;
 
     /**
      * @var string 开始时间（年-月-日 时：分：秒） 格式：yyyy-mm-dd hh:mm:ss
      */
-    public $BeginTime;
+    private $BeginTime;
 
     /**
      * @var string 开始时间（年-月-日 时：分：秒） 格式：yyyy-mm-dd hh:mm:ss
      */
-    public $EndTime;
+    private $EndTime;
+
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::GET_CAPTURE_SUM; // 初始化动作名称
+        $this->setAction(ParamSettingAction::GET_CAPTURE_SUM); // 初始化动作名称
+    }
+
+    /**
+     * @return int
+     */
+    public function getChannelNo(): int
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param int $ChannelNo
+     */
+    public function setChannelNo(int $ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBeginTime(): string
+    {
+        return $this->BeginTime;
+    }
+
+    /**
+     * @param string $BeginTime
+     */
+    public function setBeginTime(string $BeginTime): void
+    {
+        $this->BeginTime = $BeginTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndTime(): string
+    {
+        return $this->EndTime;
+    }
+
+    /**
+     * @param string $EndTime
+     */
+    public function setEndTime(string $EndTime): void
+    {
+        $this->EndTime = $EndTime;
     }
 
     public function deserialize($param)

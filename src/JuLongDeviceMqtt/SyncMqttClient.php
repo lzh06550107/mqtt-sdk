@@ -18,8 +18,8 @@ use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
  * Created on 2022/1/20 9:05
  * Create by LZH
  *
- * @method static SyncFaceManageMqttClient getSyncFaceManageMqttClient() 人脸管理同步客户端
- * @method static SyncParamSettingMqttClient getSyncParamSettingMqttClient() 设备参数管理同步客户端
+ * @method static SyncFaceManageMqttClient syncFaceManageMqttClient() 人脸管理同步客户端
+ * @method static SyncParamSettingMqttClient syncParamSettingMqttClient() 设备参数管理同步客户端
  * @method string request($uuidOrTopic, AbstractRequest $request) 发送同步请求
  */
 class SyncMqttClient
@@ -32,7 +32,10 @@ class SyncMqttClient
         'SyncParamSettingMqttClient',
     ];
 
-    private static MqttClientBuilder $mqttClientBuilder;
+    /**
+     * @var MqttClientBuilder
+     */
+    private static $mqttClientBuilder;
 
     public static function configurator(): MqttClientBuilder
     {
@@ -44,8 +47,8 @@ class SyncMqttClient
      */
     public static function __callStatic($name, $arguments) {
 
-        if (in_array(strtoupper($name), self::$method)) {
-            call_user_func_array([self::$mqttClientBuilder,'get'. strtoupper($name)], $arguments);
+        if (in_array(ucfirst($name), self::$method)) {
+            return call_user_func_array([self::$mqttClientBuilder,'get'. ucfirst($name)], $arguments);
         } else {
             throw new \Exception('方法不存在');
         }

@@ -21,12 +21,44 @@ class CaptureContent extends AbstractModel
     /**
      * @var int 上传”FaceInfo”内容(抓拍信息) 0：不上传；1：上传
      */
-    public $FaceInfo;
+    private $FaceInfo;
 
     /**
      * @var int 上传”CompareInfo”内容(比对信息) 0：不上传；1：上传
      */
-    public $CompareInfo;
+    private $CompareInfo;
+
+    /**
+     * @return int
+     */
+    public function getFaceInfo(): int
+    {
+        return $this->FaceInfo;
+    }
+
+    /**
+     * @param int $FaceInfo
+     */
+    public function setFaceInfo(int $FaceInfo): void
+    {
+        $this->FaceInfo = $FaceInfo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCompareInfo(): int
+    {
+        return $this->CompareInfo;
+    }
+
+    /**
+     * @param int $CompareInfo
+     */
+    public function setCompareInfo(int $CompareInfo): void
+    {
+        $this->CompareInfo = $CompareInfo;
+    }
 
     public function deserialize($param)
     {

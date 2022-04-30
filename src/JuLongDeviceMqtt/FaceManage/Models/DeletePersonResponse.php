@@ -17,7 +17,23 @@ class DeletePersonResponse extends AbstractResponse
     /**
      * @var string 人员ID
      */
-    public $PersonId;
+    private $PersonId;
+
+    /**
+     * @return string
+     */
+    public function getPersonId(): string
+    {
+        return $this->PersonId;
+    }
+
+    /**
+     * @param string $PersonId
+     */
+    public function setPersonId(string $PersonId): void
+    {
+        $this->PersonId = $PersonId;
+    }
 
     public function deserialize($param) {
 

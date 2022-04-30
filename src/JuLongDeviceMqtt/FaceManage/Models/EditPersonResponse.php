@@ -21,12 +21,44 @@ class EditPersonResponse extends AbstractResponse
     /**
      * @var string 人员ID
      */
-    public $PersonId;
+    private $PersonId;
 
     /**
      * @var FacePosition 人脸坐标信息(像素为单位)
      */
-    public $FacePosition;
+    private $FacePosition;
+
+    /**
+     * @return string
+     */
+    public function getPersonId(): string
+    {
+        return $this->PersonId;
+    }
+
+    /**
+     * @param string $PersonId
+     */
+    public function setPersonId(string $PersonId): void
+    {
+        $this->PersonId = $PersonId;
+    }
+
+    /**
+     * @return FacePosition
+     */
+    public function getFacePosition(): FacePosition
+    {
+        return $this->FacePosition;
+    }
+
+    /**
+     * @param FacePosition $FacePosition
+     */
+    public function setFacePosition(FacePosition $FacePosition): void
+    {
+        $this->FacePosition = $FacePosition;
+    }
 
     public function deserialize($param) {
 

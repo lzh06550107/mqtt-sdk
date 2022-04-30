@@ -21,17 +21,17 @@ class NTPServer extends AbstractModel
     /**
      * @var string 服务器
      */
-    public $Server;
+    private $Server;
 
     /**
      * @var int 端口
      */
-    public $Port;
+    private $Port;
 
     /**
      * @var int 更新间隔(单位为分钟)
      */
-    public $UpdateInterval;
+    private $UpdateInterval;
 
     /**
      * @var int 时区，TimeMode为0时有效
@@ -74,7 +74,71 @@ class NTPServer extends AbstractModel
     35:GMT+11:00 麦哲伦
     36:GMT+12:00 斐济
      */
-    public $TimeZone;
+    private $TimeZone;
+
+    /**
+     * @return string
+     */
+    public function getServer(): string
+    {
+        return $this->Server;
+    }
+
+    /**
+     * @param string $Server
+     */
+    public function setServer(string $Server): void
+    {
+        $this->Server = $Server;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->Port;
+    }
+
+    /**
+     * @param int $Port
+     */
+    public function setPort(int $Port): void
+    {
+        $this->Port = $Port;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUpdateInterval(): int
+    {
+        return $this->UpdateInterval;
+    }
+
+    /**
+     * @param int $UpdateInterval
+     */
+    public function setUpdateInterval(int $UpdateInterval): void
+    {
+        $this->UpdateInterval = $UpdateInterval;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeZone(): int
+    {
+        return $this->TimeZone;
+    }
+
+    /**
+     * @param int $TimeZone
+     */
+    public function setTimeZone(int $TimeZone): void
+    {
+        $this->TimeZone = $TimeZone;
+    }
 
     public function deserialize($param) {
 

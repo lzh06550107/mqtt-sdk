@@ -21,17 +21,65 @@ class CaptureModeParam extends AbstractModel
     /**
      * @var int 最大抓拍次数(“离开后抓拍”模式特有)
      */
-    public $MaxCaptureTimes;
+    private $MaxCaptureTimes;
 
     /**
      * @var int 抓拍次数(“间隔抓拍”，“单人模式”特有)
      */
-    public $CaptureTimes;
+    private $CaptureTimes;
 
     /**
      * @var int 抓拍间隔(单位秒/帧，“间隔抓拍”，“单人模式特有”)
      */
-    public $CaptureInterval;
+    private $CaptureInterval;
+
+    /**
+     * @return int
+     */
+    public function getMaxCaptureTimes(): int
+    {
+        return $this->MaxCaptureTimes;
+    }
+
+    /**
+     * @param int $MaxCaptureTimes
+     */
+    public function setMaxCaptureTimes(int $MaxCaptureTimes): void
+    {
+        $this->MaxCaptureTimes = $MaxCaptureTimes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCaptureTimes(): int
+    {
+        return $this->CaptureTimes;
+    }
+
+    /**
+     * @param int $CaptureTimes
+     */
+    public function setCaptureTimes(int $CaptureTimes): void
+    {
+        $this->CaptureTimes = $CaptureTimes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCaptureInterval(): int
+    {
+        return $this->CaptureInterval;
+    }
+
+    /**
+     * @param int $CaptureInterval
+     */
+    public function setCaptureInterval(int $CaptureInterval): void
+    {
+        $this->CaptureInterval = $CaptureInterval;
+    }
 
     public function deserialize($param)
     {

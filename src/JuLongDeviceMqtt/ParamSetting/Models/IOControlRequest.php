@@ -22,13 +22,29 @@ class IOControlRequest extends AbstractRequest
     /**
      * @var int IO输出持续时间(以秒为单位)
      */
-    public $ContinueSeconds;
+    private $ContinueSeconds;
+
+    /**
+     * @return int
+     */
+    public function getContinueSeconds(): int
+    {
+        return $this->ContinueSeconds;
+    }
+
+    /**
+     * @param int $ContinueSeconds
+     */
+    public function setContinueSeconds(int $ContinueSeconds): void
+    {
+        $this->ContinueSeconds = $ContinueSeconds;
+    }
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::IO_CONTROL; // 初始化动作名称
+        $this->setAction(ParamSettingAction::IO_CONTROL); // 初始化动作名称
     }
 }

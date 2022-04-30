@@ -21,7 +21,23 @@ class GetAudioCfgResponse extends AbstractResponse
     /**
      * @var AudioCfg 音频参数配置类
      */
-    public $AudioCfg;
+    private $AudioCfg;
+
+    /**
+     * @return AudioCfg
+     */
+    public function getAudioCfg(): AudioCfg
+    {
+        return $this->AudioCfg;
+    }
+
+    /**
+     * @param AudioCfg $AudioCfg
+     */
+    public function setAudioCfg(AudioCfg $AudioCfg): void
+    {
+        $this->AudioCfg = $AudioCfg;
+    }
 
     public function deserialize($param) {
 

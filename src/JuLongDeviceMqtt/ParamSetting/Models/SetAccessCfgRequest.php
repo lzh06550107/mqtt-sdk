@@ -17,7 +17,7 @@ use JuLongDeviceMqtt\ParamSetting\ParamSettingAction;
  * Created on 2022/2/12 17:38
  * Create by LZH
  *
- * @property AccessCfg $AccessCfg 测温机门禁控制参数配置类
+ * @method setAccessCfg(AccessCfg $AccessCfg) 测温机门禁控制参数配置类
  */
 class SetAccessCfgRequest extends AbstractRequest
 {
@@ -27,7 +27,7 @@ class SetAccessCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_ACCESS_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_ACCESS_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用

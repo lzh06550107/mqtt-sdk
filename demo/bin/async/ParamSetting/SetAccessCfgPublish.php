@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,6 +19,7 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\AccessCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\AccessControl;
 use JuLongDeviceMqtt\ParamSetting\Models\GateControl;
@@ -25,9 +27,12 @@ use JuLongDeviceMqtt\ParamSetting\Models\SetAccessCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\Models\TempAndMask;
 use JuLongDeviceMqtt\ParamSetting\Models\TimePeriod;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -50,86 +55,85 @@ $setAlarmCfgRequest = new SetAccessCfgRequest();
 $accessCfg = new AccessCfg();
 
 $tempAndMask = new TempAndMask();
-$tempAndMask->CheckMode = 3;
-$tempAndMask->RealTimeTempDetection = 0;
-$tempAndMask->ContinuedTempDetection = 0;
-$tempAndMask->NoMaskOperate1 = 0;
-$tempAndMask->NoMaskOperate2 = 0;
-$tempAndMask->TempDetectionMode = 0;
-$tempAndMask->TempThreshold = "37.3";
-$tempAndMask->TempUnit = 0;
-$tempAndMask->TempCorrection = 0;
-$tempAndMask->SmartTime = 0;
-$tempAndMask->HightTempCorrection = 0;
-$tempAndMask->LowTempCorrection = 0;
-$tempAndMask->TempFilterMode = 0;
-$tempAndMask->TempFilterMax = "37.3";
-$tempAndMask->TempFilterMin = "29.7";
-$tempAndMask->TempDisplay = 1;
+$tempAndMask->setCheckMode(3);
+$tempAndMask->setRealTimeTempDetection(0);
+$tempAndMask->setContinuedTempDetection(0);
+$tempAndMask->setNoMaskOperate1(0);
+$tempAndMask->setNoMaskOperate2(0);
+$tempAndMask->setTempDetectionMode(0);
+$tempAndMask->setTempThreshold("37.3");
+$tempAndMask->setTempUnit(0);
+$tempAndMask->setTempCorrection(0);
+$tempAndMask->setSmartTime(0);
+$tempAndMask->setHightTempCorrection(0);
+$tempAndMask->setLowTempCorrection(0);
+$tempAndMask->setTempFilterMode(0);
+$tempAndMask->setTempFilterMax(37.3);
+$tempAndMask->setTempFilterMin(29.7);
+$tempAndMask->setTempDisplay(1);
 
 $timePeriod = new TimePeriod();
-$timePeriod->PeriodEnabled = 0;
-$timePeriod->TimeBegin = "22:00";
-$timePeriod->TimeEnd = "23:59";
+$timePeriod->setPeriodEnabled(0);
+$timePeriod->setTimeBegin("22:00");
+$timePeriod->setTimeEnd("23:59");
 
-$tempAndMask->NotTempDetectionPeriod = $timePeriod;
+$tempAndMask->setNotTempDetectionPeriod($timePeriod);
 
 $accessControl = new AccessControl();
 
-$accessControl->LightControl = 1;
-$accessControl->DaytimeStart = "06:00:00";
-$accessControl->NightStart = "20:00:00";
-$accessControl->ScreenDisplayMode = 1;
-$accessControl->FaceDetecRatio = 0;
-$accessControl->ListSimilarity = 70;
-$accessControl->IDCardSimilarity = 60;
-$accessControl->SameFilter = 3;
-$accessControl->TimeDisplay = 1;
-$accessControl->IPDisplay = 1;
-$accessControl->UUIDDisplay = 1;
-$accessControl->DateFormat = 0;
-$accessControl->LeakDisplay = 0;
-$accessControl->DateFormat = 0;
-$accessControl->ComparisonRecord = 0;
-$accessControl->NoMaskIO = 0;
-$accessControl->CompareMode = 1;
-$accessControl->HealthCodeType = 1;
-$accessControl->HealthCodeOnlineEnabled = 1;
-$accessControl->FaceWitnessCompare = 1;
-$accessControl->PriorityTemperature = 1;
-$accessControl->FaceDetectEnabled = 1;
-$accessControl->VoiceEnabled = 1;
-$accessControl->TempAbnormal = 1;
-$accessControl->RFIDModule = 0;
+$accessControl->setLightControl(1);
+$accessControl->setDaytimeStart("06:00:00");
+$accessControl->setNightStart("20:00:00");
+$accessControl->setScreenDisplayMode(1);
+$accessControl->setFaceDetecRatio(0);
+$accessControl->setListSimilarity(70);
+$accessControl->setIDCardSimilarity(60);
+$accessControl->setSameFilter(3);
+$accessControl->setTimeDisplay(1);
+$accessControl->setIPDisplay(1);
+$accessControl->setUUIDDisplay(1);
+$accessControl->setDateFormat(0);
+$accessControl->setLeakDisplay(0);
+$accessControl->setDateFormat(0);
+$accessControl->setComparisonRecord(0);
+$accessControl->setNoMaskIO(0);
+$accessControl->setCompareMode(1);
+$accessControl->setHealthCodeType(1);
+$accessControl->setHealthCodeOnlineEnabled(1);
+$accessControl->setFaceWitnessCompare(1);
+$accessControl->setPriorityTemperature(1);
+$accessControl->setFaceDetectEnabled(1);
+$accessControl->setVoiceEnabled(1);
+$accessControl->setTempAbnormal(1);
+$accessControl->setRFIDModule(0);
 
 $gateControl = new GateControl();
-$gateControl->SignalInterface = 1;
-$gateControl->IODuration = 1;
-$gateControl->ContactType = 0;
-$gateControl->IODuration2 = 1;
-$gateControl->ContactType2 = 0;
-$gateControl->WiganFormat = 1;
-$gateControl->WiganPositive = 0;
-$gateControl->PulseContinue = 40;
-$gateControl->PulseInterval = 200;
-$gateControl->WiganContent = 0;
-$gateControl->WiganFormat = 1;
-$gateControl->WiganPositive = 0;
-$gateControl->PulseContinue = 40;
-$gateControl->PulseInterval = 200;
-$gateControl->PrinterSetting = 1;
-$gateControl->PaperSize = 0;
+$gateControl->setSignalInterface(1);
+$gateControl->setIODuration(1);
+$gateControl->setContactType(0);
+$gateControl->setIODuration2(1);
+$gateControl->setContactType2(0);
+$gateControl->setWiganFormat(1);
+$gateControl->setWiganPositive(0);
+$gateControl->setPulseContinue(40);
+$gateControl->setPulseInterval(200);
+$gateControl->setWiganContent(0);
+$gateControl->setWiganFormat(1);
+$gateControl->setWiganPositive(0);
+$gateControl->setPulseContinue(40);
+$gateControl->setPulseInterval(200);
+$gateControl->setPrinterSetting(1);
+$gateControl->setPaperSize(0);
 
-$accessCfg->TempAndMask = $tempAndMask;
-$accessCfg->AccessControl = $accessControl;
-$accessCfg->GateControl = $gateControl;
+$accessCfg->setTempAndMask($tempAndMask);
+$accessCfg->setAccessControl($accessControl);
+$accessCfg->setGateControl($gateControl);
 
-$setAlarmCfgRequest->AccessCfg = $accessCfg;
+$setAlarmCfgRequest->setAccessCfg($accessCfg);
 
 Coroutine\run(function () use ($paramSettingMqttClient, $setAlarmCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAlarmCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAlarmCfgRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

@@ -22,22 +22,22 @@ class SetQRCodeRequest extends AbstractRequest
     /**
      * @var int 二维码显示类型 0：URL下载地址；1：图片Base64
      */
-    public $PictureType;
+    private $PictureType;
 
     /**
      * @var int 图片格式 0：JPG；1：BMP
      */
-    public $PictureFormat;
+    private $PictureFormat;
 
     /**
      * @var string|null 二维码下载地址
      */
-    public $QRCodeUrl;
+    private $QRCodeUrl;
 
     /**
      * @var string|null 二维码图片（Base64）
      */
-    public $QRCodePicture;
+    private $QRCodePicture;
 
     /**
      * 构造函数

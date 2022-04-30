@@ -25,14 +25,14 @@ class SetFaceCfgRequest extends AbstractRequest
     /**
      * @var int 通道号(NVR服务器需要用到，该通道号对应前端IPC)
      */
-    public $ChannelNo;
+    private $ChannelNo;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_FACE_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_FACE_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用
@@ -44,4 +44,21 @@ class SetFaceCfgRequest extends AbstractRequest
             $this->$property = $value;
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getChannelNo(): int
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param int $ChannelNo
+     */
+    public function setChannelNo(int $ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
+
 }

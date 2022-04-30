@@ -27,7 +27,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -62,7 +62,7 @@ $getRecordsByPictureRequest->setNameCount(500);
 // TODO 回调订阅函数有点慢，需要查找原因
 Coroutine\run(function () use($faceManageBaseMqttClient, $getRecordsByPictureRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getRecordsByPictureRequest, 1);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getRecordsByPictureRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

@@ -21,77 +21,317 @@ class AlarmCfg extends AbstractModel
     /**
      * @var int 报警开关 0：关闭；1：开启
      */
-    public $FaceAlarmEnabled;
+    private $FaceAlarmEnabled;
 
     /**
      * @var int 黑名单报警开关 0：关闭；1：开启
      */
-    public $BlackListAlarmEnabled;
+    private $BlackListAlarmEnabled;
 
     /**
      * @var int 白名单报警开关 0：关闭；1：开启
      */
-    public $WhiteListAlarmEnabled;
+    private $WhiteListAlarmEnabled;
 
     /**
      * @var int VIP名单报警开关 0：关闭；1：开启
      */
-    public $VIPListAlarmEnabled;
+    private $VIPListAlarmEnabled;
 
     /**
      * @var int 非白名单报警开关 0：关闭；1：开启
      */
-    public $NonWhiteListAlarmEnabled;
+    private $NonWhiteListAlarmEnabled;
 
     /**
      * @var int IO输出开关 0：关闭；1：开启
      */
-    public $IOAlarmEnabled;
+    private $IOAlarmEnabled;
 
     /**
      * @var int IO输出状态类型 0：常开；1：常闭
      */
-    public $IOStateType;
+    private $IOStateType;
 
     /**
      * @var int IO输出信号类型 0：持续输出；1：脉冲输出
      */
-    public $IOSignalType;
+    private $IOSignalType;
 
     /**
      * @var int 报警输出持续时间（秒为单位）
      */
-    public $IOAlarmTime;
+    private $IOAlarmTime;
 
     /**
      * @var int 人脸识别模式 0：次数识别；1：一直识别；2：单张识别
      */
-    public $FaceAlarmMode;
+    private $FaceAlarmMode;
 
     /**
      * @var int 人脸识别次数，注：”次数识别”模式特有参数(FaceAlarmMode=0)，其它模式无效
      */
-    public $FaceAlarmTimes;
+    private $FaceAlarmTimes;
 
     /**
      * @var int 人脸识别相似度
      */
-    public $Similarity;
+    private $Similarity;
 
     /**
      * @var int 名单识别过滤时间(秒为单位)，同一名单间隔时间内只识别一次，目前仅比对机支持
      */
-    public $PersonsTime;
+    private $PersonsTime;
 
     /**
      * @var int 陌生人过滤时间(秒为单位)，目前仅比对机支持
      */
-    public $StrangersTime;
+    private $StrangersTime;
 
     /**
      * @var TimeTable[] 布防时间段(支持两个时间段)
      */
-    public $TimeTable;
+    private $TimeTable;
+
+    /**
+     * @return int
+     */
+    public function getFaceAlarmEnabled(): int
+    {
+        return $this->FaceAlarmEnabled;
+    }
+
+    /**
+     * @param int $FaceAlarmEnabled
+     */
+    public function setFaceAlarmEnabled(int $FaceAlarmEnabled): void
+    {
+        $this->FaceAlarmEnabled = $FaceAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBlackListAlarmEnabled(): int
+    {
+        return $this->BlackListAlarmEnabled;
+    }
+
+    /**
+     * @param int $BlackListAlarmEnabled
+     */
+    public function setBlackListAlarmEnabled(int $BlackListAlarmEnabled): void
+    {
+        $this->BlackListAlarmEnabled = $BlackListAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWhiteListAlarmEnabled(): int
+    {
+        return $this->WhiteListAlarmEnabled;
+    }
+
+    /**
+     * @param int $WhiteListAlarmEnabled
+     */
+    public function setWhiteListAlarmEnabled(int $WhiteListAlarmEnabled): void
+    {
+        $this->WhiteListAlarmEnabled = $WhiteListAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVIPListAlarmEnabled(): int
+    {
+        return $this->VIPListAlarmEnabled;
+    }
+
+    /**
+     * @param int $VIPListAlarmEnabled
+     */
+    public function setVIPListAlarmEnabled(int $VIPListAlarmEnabled): void
+    {
+        $this->VIPListAlarmEnabled = $VIPListAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNonWhiteListAlarmEnabled(): int
+    {
+        return $this->NonWhiteListAlarmEnabled;
+    }
+
+    /**
+     * @param int $NonWhiteListAlarmEnabled
+     */
+    public function setNonWhiteListAlarmEnabled(int $NonWhiteListAlarmEnabled): void
+    {
+        $this->NonWhiteListAlarmEnabled = $NonWhiteListAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIOAlarmEnabled(): int
+    {
+        return $this->IOAlarmEnabled;
+    }
+
+    /**
+     * @param int $IOAlarmEnabled
+     */
+    public function setIOAlarmEnabled(int $IOAlarmEnabled): void
+    {
+        $this->IOAlarmEnabled = $IOAlarmEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIOStateType(): int
+    {
+        return $this->IOStateType;
+    }
+
+    /**
+     * @param int $IOStateType
+     */
+    public function setIOStateType(int $IOStateType): void
+    {
+        $this->IOStateType = $IOStateType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIOSignalType(): int
+    {
+        return $this->IOSignalType;
+    }
+
+    /**
+     * @param int $IOSignalType
+     */
+    public function setIOSignalType(int $IOSignalType): void
+    {
+        $this->IOSignalType = $IOSignalType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIOAlarmTime(): int
+    {
+        return $this->IOAlarmTime;
+    }
+
+    /**
+     * @param int $IOAlarmTime
+     */
+    public function setIOAlarmTime(int $IOAlarmTime): void
+    {
+        $this->IOAlarmTime = $IOAlarmTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFaceAlarmMode(): int
+    {
+        return $this->FaceAlarmMode;
+    }
+
+    /**
+     * @param int $FaceAlarmMode
+     */
+    public function setFaceAlarmMode(int $FaceAlarmMode): void
+    {
+        $this->FaceAlarmMode = $FaceAlarmMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFaceAlarmTimes(): int
+    {
+        return $this->FaceAlarmTimes;
+    }
+
+    /**
+     * @param int $FaceAlarmTimes
+     */
+    public function setFaceAlarmTimes(int $FaceAlarmTimes): void
+    {
+        $this->FaceAlarmTimes = $FaceAlarmTimes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSimilarity(): int
+    {
+        return $this->Similarity;
+    }
+
+    /**
+     * @param int $Similarity
+     */
+    public function setSimilarity(int $Similarity): void
+    {
+        $this->Similarity = $Similarity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPersonsTime(): int
+    {
+        return $this->PersonsTime;
+    }
+
+    /**
+     * @param int $PersonsTime
+     */
+    public function setPersonsTime(int $PersonsTime): void
+    {
+        $this->PersonsTime = $PersonsTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrangersTime(): int
+    {
+        return $this->StrangersTime;
+    }
+
+    /**
+     * @param int $StrangersTime
+     */
+    public function setStrangersTime(int $StrangersTime): void
+    {
+        $this->StrangersTime = $StrangersTime;
+    }
+
+    /**
+     * @return TimeTable[]
+     */
+    public function getTimeTable(): array
+    {
+        return $this->TimeTable;
+    }
+
+    /**
+     * @param TimeTable[] $TimeTable
+     */
+    public function setTimeTable(array $TimeTable): void
+    {
+        $this->TimeTable = $TimeTable;
+    }
 
     public function deserialize($param) {
 

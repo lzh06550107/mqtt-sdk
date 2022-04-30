@@ -21,7 +21,7 @@ class DeviceCfg extends AbstractModel
     /**
      * @var int VO环出制式 0：PAL；1：NTSC，暂时只有门禁机支持
      */
-    public $VideoFormat;
+    private $VideoFormat;
 
     /**
      * @var int 设备语音，暂时只有门禁机支持
@@ -39,12 +39,60 @@ class DeviceCfg extends AbstractModel
     11:Türkiye
     12:Custom language
      */
-    public $DeviceLanguage;
+    private $DeviceLanguage;
 
     /**
      * @var int 屏幕显示UUID 0：不显示；1：显示，门禁机特有
      */
-    public $DisplayUUID;
+    private $DisplayUUID;
+
+    /**
+     * @return int
+     */
+    public function getVideoFormat(): int
+    {
+        return $this->VideoFormat;
+    }
+
+    /**
+     * @param int $VideoFormat
+     */
+    public function setVideoFormat(int $VideoFormat): void
+    {
+        $this->VideoFormat = $VideoFormat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeviceLanguage(): int
+    {
+        return $this->DeviceLanguage;
+    }
+
+    /**
+     * @param int $DeviceLanguage
+     */
+    public function setDeviceLanguage(int $DeviceLanguage): void
+    {
+        $this->DeviceLanguage = $DeviceLanguage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDisplayUUID(): int
+    {
+        return $this->DisplayUUID;
+    }
+
+    /**
+     * @param int $DisplayUUID
+     */
+    public function setDisplayUUID(int $DisplayUUID): void
+    {
+        $this->DisplayUUID = $DisplayUUID;
+    }
 
     public function deserialize($param)
     {

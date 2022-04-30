@@ -22,24 +22,72 @@ class DeleteRecordRequest extends AbstractRequest
     /**
      * @var int 1：按时间段删除
      */
-    public $Mode;
+    private $Mode;
 
     /**
      * @var string 开始时间（年-月-日 时：分：秒） 格式：yyyy-mm-dd hh:mm:ss，不传默认从第一条开始
      */
-    public $BeginTime;
+    private $BeginTime;
 
     /**
      * @var string 开始时间（年-月-日 时：分：秒） 格式：yyyy-mm-dd hh:mm:ss，不传默认到最后一条结束
      */
-    public $EndTime;
+    private $EndTime;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::DELETE_RECORD; // 初始化动作名称
+        $this->setAction(ParamSettingAction::DELETE_RECORD); // 初始化动作名称
+    }
+
+    /**
+     * @return int
+     */
+    public function getMode(): int
+    {
+        return $this->Mode;
+    }
+
+    /**
+     * @param int $Mode
+     */
+    public function setMode(int $Mode): void
+    {
+        $this->Mode = $Mode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBeginTime(): string
+    {
+        return $this->BeginTime;
+    }
+
+    /**
+     * @param string $BeginTime
+     */
+    public function setBeginTime(string $BeginTime): void
+    {
+        $this->BeginTime = $BeginTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndTime(): string
+    {
+        return $this->EndTime;
+    }
+
+    /**
+     * @param string $EndTime
+     */
+    public function setEndTime(string $EndTime): void
+    {
+        $this->EndTime = $EndTime;
     }
 
 }

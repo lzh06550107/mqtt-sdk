@@ -17,13 +17,29 @@ class GetAlarmCfgRequest extends AbstractRequest
     /**
      * @var int 通道号(NVR服务器需要用到，该通道号对应前端IPC)
      */
-    public $ChannelNo;
+    private $ChannelNo;
+
+    /**
+     * @return int
+     */
+    public function getChannelNo(): int
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param int $ChannelNo
+     */
+    public function setChannelNo(int $ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::GET_ALARM_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::GET_ALARM_CFG); // 初始化动作名称
     }
 }

@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,11 +19,15 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\GetCaptureSumRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -41,15 +46,13 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $getCaptureSumRequest = new GetCaptureSumRequest();
-$getCaptureSumRequest->ChannelNo = 0;
-$getCaptureSumRequest->BeginTime = "2020-11-13 00:00:00";
-$getCaptureSumRequest->EndTime = "2022-11-13 00:00:00";
+$getCaptureSumRequest->setChannelNo(0);
+$getCaptureSumRequest->setBeginTime("2020-11-13 00:00:00");
+$getCaptureSumRequest->setEndTime("2022-11-13 00:00:00");
 
-// TODO 未测试
 Coroutine\run(function () use($paramSettingMqttClient, $getCaptureSumRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getCaptureSumRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getCaptureSumRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

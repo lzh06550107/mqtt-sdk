@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,13 +19,17 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\AlarmCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\SetAlarmCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\Models\TimeTable;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -43,41 +48,40 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $setAlarmCfgRequest = new SetAlarmCfgRequest();
-$setAlarmCfgRequest->ChannelNo = 0;
+$setAlarmCfgRequest->setChannelNo(0);
 
 $alarmCfg = new AlarmCfg();
-$alarmCfg->FaceAlarmEnabled = 1;
-$alarmCfg->BlackListAlarmEnabled = 0;
-$alarmCfg->WhiteListAlarmEnabled = 1;
-$alarmCfg->VIPListAlarmEnabled = 0;
-$alarmCfg->NonWhiteListAlarmEnabled = 0;
-$alarmCfg->IOAlarmEnabled = 1;
-$alarmCfg->IOStateType = 0;
-$alarmCfg->IOSignalType = 0;
-$alarmCfg->IOAlarmTime = 10;
-$alarmCfg->FaceAlarmMode = 2;
-$alarmCfg->Similarity = 80;
-$alarmCfg->PersonsTime = 60;
-$alarmCfg->StrangersTime = 60;
+$alarmCfg->setFaceAlarmEnabled(1);
+$alarmCfg->setBlackListAlarmEnabled(0);
+$alarmCfg->setWhiteListAlarmEnabled(1);
+$alarmCfg->setVIPListAlarmEnabled(0);
+$alarmCfg->setNonWhiteListAlarmEnabled(0);
+$alarmCfg->setIOAlarmEnabled(1);
+$alarmCfg->setIOStateType(0);
+$alarmCfg->setIOSignalType(0);
+$alarmCfg->setIOAlarmTime(10);
+$alarmCfg->setFaceAlarmMode(2);
+$alarmCfg->setSimilarity(80);
+$alarmCfg->setPersonsTime(60);
+$alarmCfg->setStrangersTime(60);
 
 $timeTable1 = new TimeTable();
-$timeTable1->TimeEnable = 1;
-$timeTable1->TimeBegin = "00:00:01";
-$timeTable1->TimeEnd = "23:59:01";
+$timeTable1->setTimeEnable(1);
+$timeTable1->setTimeBegin("00:00:01");
+$timeTable1->setTimeEnd("23:59:01");
 
 $timeTable2 = new TimeTable();
-$timeTable2->TimeEnable = 1;
-$timeTable2->TimeBegin = "00:00:02";
-$timeTable2->TimeEnd = "23:59:02";
+$timeTable2->setTimeEnable(1);
+$timeTable2->setTimeBegin("00:00:02");
+$timeTable2->setTimeEnd("23:59:02");
 
-$alarmCfg->TimeTable = [$timeTable1, $timeTable2];
+$alarmCfg->setTimeTable([$timeTable1, $timeTable2]);
 
-$setAlarmCfgRequest->AlarmCfg = $alarmCfg;
+$setAlarmCfgRequest->setAlarmCfg($alarmCfg);
 
 Coroutine\run(function () use ($paramSettingMqttClient, $setAlarmCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAlarmCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAlarmCfgRequest, 1);
     Coroutine::sleep(3);
 //    }
 });

@@ -21,27 +21,107 @@ class AudioCfg extends AbstractModel
     /**
      * @var int 音频开关 0：关闭；1：打开
      */
-    public $Enable;
+    private $Enable;
 
     /**
      * @var int 音频输入 0：麦克；1：线输入
      */
-    public $AudioInput;
+    private $AudioInput;
 
     /**
      * @var int 压缩格式 0：G726；1：G711A；2：G711U；3：AAC
      */
-    public $AudioFormat;
+    private $AudioFormat;
 
     /**
      * @var int 输入音量
      */
-    public $InputVolume;
+    private $InputVolume;
 
     /**
      * @var int 输出音量
      */
-    public $OutputVolume;
+    private $OutputVolume;
+
+    /**
+     * @return int
+     */
+    public function getEnable(): int
+    {
+        return $this->Enable;
+    }
+
+    /**
+     * @param int $Enable
+     */
+    public function setEnable(int $Enable): void
+    {
+        $this->Enable = $Enable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAudioInput(): int
+    {
+        return $this->AudioInput;
+    }
+
+    /**
+     * @param int $AudioInput
+     */
+    public function setAudioInput(int $AudioInput): void
+    {
+        $this->AudioInput = $AudioInput;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAudioFormat(): int
+    {
+        return $this->AudioFormat;
+    }
+
+    /**
+     * @param int $AudioFormat
+     */
+    public function setAudioFormat(int $AudioFormat): void
+    {
+        $this->AudioFormat = $AudioFormat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInputVolume(): int
+    {
+        return $this->InputVolume;
+    }
+
+    /**
+     * @param int $InputVolume
+     */
+    public function setInputVolume(int $InputVolume): void
+    {
+        $this->InputVolume = $InputVolume;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOutputVolume(): int
+    {
+        return $this->OutputVolume;
+    }
+
+    /**
+     * @param int $OutputVolume
+     */
+    public function setOutputVolume(int $OutputVolume): void
+    {
+        $this->OutputVolume = $OutputVolume;
+    }
 
     public function deserialize($param)
     {

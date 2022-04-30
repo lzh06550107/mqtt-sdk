@@ -24,6 +24,6 @@ class RestartRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::RESTART; // 初始化动作名称
+        $this->setAction(ParamSettingAction::RESTART); // 初始化动作名称
     }
 }

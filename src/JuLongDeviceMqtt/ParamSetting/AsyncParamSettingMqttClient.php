@@ -14,11 +14,17 @@ use JuLongDeviceMqtt\Common\AbstractMqttClient;
 use JuLongDeviceMqtt\Common\AbstractRequest;
 use JuLongDeviceMqtt\Common\AbstractResponse;
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Contracts\MqttClient;
 
 /**
  * 设备配置客户端
  * Created on 2022/2/11 18:18
  * Create by LZH
+ *
+ * @method void loop(bool $allowSleep = true, bool $exitWhenQueuesEmpty = false, int $queueWaitLimit = null)
+ * @method void interruptedLoop()
+ * @method void disconnect()
+ * @method MqttClient registerLoopEventHandler(\Closure $callback)
  */
 class AsyncParamSettingMqttClient
 {
@@ -47,21 +53,23 @@ class AsyncParamSettingMqttClient
      * 向指定的主题发布消息
      * @param string $uuidOrTopic uuid或topic
      * @param AbstractRequest $message 消息内容
-     * @param int $qos
-     * @param int $dup
-     * @param int $retain
+     * @param int $qualityOfService
+     * @param bool $dup
+     * @param bool $retain
      * @param array $properties
-     * @return array|bool|void
+     * @return void
+     * @throws \JuLongDeviceMqtt\Exception\ClientNotConnectedToBrokerException
+     * @throws \JuLongDeviceMqtt\Exception\PendingMessageAlreadyExistsException
+     * @throws \JuLongDeviceMqtt\Exception\RepositoryException
      * @author LZH
      * @since 2022/01/21
      */
-    public function publish(string $uuidOrTopic, AbstractRequest $message , $qos = 0, $dup = 0, $retain = 0, $properties = [])
+    public function publish(string $uuidOrTopic, AbstractRequest $message , int $qualityOfService = MQTT_QOS_0, bool $dup = false, bool $retain = false, array $properties = []): void
     {
         $this->asyncMqttClient->connect();
         $topic = new DeviceConfigureTopic($uuidOrTopic);
-        $result = $this->asyncMqttClient->publish($topic, $message, $qos, $dup, $retain, $properties);
+        $this->asyncMqttClient->publish((string)$topic, (string)$message, $qualityOfService, $dup, $retain, $properties);
         $this->asyncMqttClient->disconnect();
-        return $result;
     }
 
     /**
@@ -74,13 +82,12 @@ class AsyncParamSettingMqttClient
      * @author LZH
      * @since 2022/01/21
      */
-    public function subscribe(string $uuidOrTopic, callable $callback, int $qualityOfService = MQTT_QOS_0)
+    public function subscribe(string $uuidOrTopic, callable $callback, int $qualityOfService = MQTT_QOS_0): void
     {
         $this->asyncMqttClient->connect();
         $topic = new AckTopic($uuidOrTopic);
-        $result = $this->asyncMqttClient->subscribe((string)$topic, $callback, $qualityOfService);
+        $this->asyncMqttClient->subscribe((string)$topic, $callback, $qualityOfService);
 //        $this->asyncMqttClient->disconnect(); 不能关闭，需要开启循环
-        return $result;
     }
 
     public function __call($name, $arguments) {
@@ -92,6 +99,5 @@ class AsyncParamSettingMqttClient
         }
 
     }
-
 
 }

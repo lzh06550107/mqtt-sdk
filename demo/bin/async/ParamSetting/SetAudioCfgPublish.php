@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,12 +19,16 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\AudioCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\SetAudioCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -44,18 +49,17 @@ $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 $setAudioCfgRequest = new SetAudioCfgRequest();
 
 $audioCfg = new AudioCfg();
-$audioCfg->Enable = 0;
-$audioCfg->AudioInput = 0;
-$audioCfg->AudioFormat = 0;
-$audioCfg->InputVolume = 11;
-$audioCfg->OutputVolume = 10;
+$audioCfg->setEnable(0);
+$audioCfg->setAudioInput(0);
+$audioCfg->setAudioFormat(0);
+$audioCfg->setInputVolume(11);
+$audioCfg->setOutputVolume(10);
 
-$setAudioCfgRequest->AudioCfg = $audioCfg;
+$setAudioCfgRequest->setAudioCfg($audioCfg);
 
 Coroutine\run(function () use($paramSettingMqttClient, $setAudioCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAudioCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setAudioCfgRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

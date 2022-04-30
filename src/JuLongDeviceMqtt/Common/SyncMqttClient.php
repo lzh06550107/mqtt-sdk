@@ -11,7 +11,6 @@ namespace JuLongDeviceMqtt\Common;
 
 use JuLongDeviceMqtt\Contracts\Repository;
 use Psr\Log\LoggerInterface;
-use Simps\MQTT\Client;
 use Swoole\Coroutine\Channel;
 
 /**
@@ -25,11 +24,10 @@ class SyncMqttClient extends AbstractMqttClient
     private $logger;
 
     public function __construct(
-        Client $client = null,
-        Repository $repository = null,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        Repository $repository = null
     ) {
-        parent::__construct($client, $repository, $logger);
+        parent::__construct(null, $logger, $repository);
         $this->logger = $logger ?: new DefaultLogger();
     }
 
@@ -71,8 +69,6 @@ class SyncMqttClient extends AbstractMqttClient
 
         } catch (\Throwable $e) {
             throw $e;
-        } finally {
-            $this->disconnect();
         }
 
     }

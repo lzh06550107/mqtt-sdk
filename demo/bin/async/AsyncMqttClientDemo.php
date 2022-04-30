@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use JuLongDeviceMqtt\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\FaceManage\Models\AddPersonRequest;
 use JuLongDeviceMqtt\FaceManage\Models\PersonInfo;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
 foreach (
@@ -30,7 +32,7 @@ AsyncMqttClient::configurator()->setBrokerHost('128.128.13.90')->setBrokerPort(1
         'connect_timeout' => 5.0,
         'write_timeout' => 5.0,
         'read_timeout' => 5.0,
-    ]);
+    ])->setLoger(new DefaultLogger(LogLevel::INFO));
 
 $faceManageBaseMqttClient = AsyncMqttClient::asyncFaceManageMqttClient(); // 获取异步客户端
 

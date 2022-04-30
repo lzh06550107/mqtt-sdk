@@ -16,23 +16,86 @@ class FacePosition extends AbstractModel
     /**
      * @var int 左上角横坐标
      */
-    public $left;
+    private $left;
 
     /**
      * @var int 左上角纵坐标
      */
-    public $top;
+    private $top;
 
     /**
      * @var int 右下角横坐标
      */
-    public $right;
+    private $right;
 
     /**
      * @var int 右下角纵坐标
      */
-    public $bottom;
+    private $bottom;
 
+    /**
+     * @return int
+     */
+    public function getLeft(): int
+    {
+        return $this->left;
+    }
+
+    /**
+     * @param int $left
+     */
+    public function setLeft(int $left): void
+    {
+        $this->left = $left;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTop(): int
+    {
+        return $this->top;
+    }
+
+    /**
+     * @param int $top
+     */
+    public function setTop(int $top): void
+    {
+        $this->top = $top;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRight(): int
+    {
+        return $this->right;
+    }
+
+    /**
+     * @param int $right
+     */
+    public function setRight(int $right): void
+    {
+        $this->right = $right;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBottom(): int
+    {
+        return $this->bottom;
+    }
+
+    /**
+     * @param int $bottom
+     */
+    public function setBottom(int $bottom): void
+    {
+        $this->bottom = $bottom;
+    }
 
     public function deserialize($param) {
 

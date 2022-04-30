@@ -43,7 +43,8 @@ class AsyncMqttClient
     /**
      * @throws \Exception
      */
-    public static function __callStatic($name, $arguments) {
+    public static function __callStatic($name, $arguments)
+    {
 
         if (in_array(ucfirst($name), self::$method)) {
             print_r('get' . ucfirst($name));

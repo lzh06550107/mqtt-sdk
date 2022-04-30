@@ -23,57 +23,57 @@ class GetRecordsByPictureRequest extends AbstractRequest
      * @var int|null 通道号(NVR服务器需要用到)
     使用掩码方式，支持组合通道，如要查询1、3、5通道，则传入21，0表示所有通道
      */
-    public $ChannelNo;
+    private $ChannelNo;
 
     /**
      * @var int 搜索方式 0：图片；1：特征值；2：人员ID
      */
-    public $SearchType;
+    private $SearchType;
 
     /**
      * @var string|null 人脸图片（Base64），SearchType等于0
      */
-    public $FacePicture;
+    private $FacePicture;
 
     /**
      * @var string|null 人员特征值数据(Base64，不可转换为图片)，SearchType等于1
      */
-    public $FeatureValue;
+    private $FeatureValue;
 
     /**
      * @var string|null 人员入库时的ID
      */
-    public $PersonId;
+    private $PersonId;
 
     /**
      * @var int 排序方式 0：按相似度排序；1：按时间排序（从小到大）；2：按时间排序（从大到小）
      */
-    public $SortBy;
+    private $SortBy;
 
     /**
      * @var int|null 相似度阈值，返回大于等于该阈值的人脸，SearchType不为2时必填
      */
-    public $Similarity;
+    private $Similarity;
 
     /**
      * @var string|null 开始时间 格式：yyyy-MM-dd hh:mm:ss，如不填则从第一次比对开始查询
      */
-    public $BeginTime;
+    private $BeginTime;
 
     /**
      * @var string|null 结束时间 格式：yyyy-MM-dd hh:mm:ss，如不填则从最后一次比对开始查询
      */
-    public $EndTime;
+    private $EndTime;
 
     /**
      * @var int|null 当前要获取的页，初值为1
      */
-    public $PageCurNO;
+    private $PageCurNO;
 
     /**
      * @var int|null 指定页号需要返回的比对记录数目，默认1000，最多一页返回1000条记录
      */
-    public $NameCount;
+    private $NameCount;
 
     /**
      * 构造函数

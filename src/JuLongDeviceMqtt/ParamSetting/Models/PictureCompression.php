@@ -13,9 +13,41 @@ use JuLongDeviceMqtt\Common\AbstractModel;
 
 class PictureCompression extends AbstractModel
 {
-    public $CompressionEnabled;
+    private $CompressionEnabled;
 
-    public $CompressionSize;
+    private $CompressionSize;
+
+    /**
+     * @return mixed
+     */
+    public function getCompressionEnabled()
+    {
+        return $this->CompressionEnabled;
+    }
+
+    /**
+     * @param mixed $CompressionEnabled
+     */
+    public function setCompressionEnabled($CompressionEnabled): void
+    {
+        $this->CompressionEnabled = $CompressionEnabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompressionSize()
+    {
+        return $this->CompressionSize;
+    }
+
+    /**
+     * @param mixed $CompressionSize
+     */
+    public function setCompressionSize($CompressionSize): void
+    {
+        $this->CompressionSize = $CompressionSize;
+    }
 
     public function deserialize($param)
     {

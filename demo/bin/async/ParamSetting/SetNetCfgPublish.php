@@ -9,6 +9,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -19,12 +20,16 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\NetCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\SetNetCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -45,20 +50,19 @@ $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 $setNetCfgRequest = new SetNetCfgRequest();
 
 $netCfg = new NetCfg();
-$netCfg->DHCPEnabled = 0;
-$netCfg->IPAddress = "128.128.77.222";
-$netCfg->SubNetMask = "255.255.0.0";
-$netCfg->Gateway = "128.128.1.1";
-$netCfg->DNS1 = "114.114.114.114";
-$netCfg->DNS2 = "8.8.8.8";
+$netCfg->setDHCPEnabled(0);
+$netCfg->setIPAddress("128.128.77.222");
+$netCfg->setSubNetMask("255.255.0.0");
+$netCfg->setGateway("128.128.1.1");
+$netCfg->setDNS1("114.114.114.114");
+$netCfg->setDNS2("8.8.8.8");
 
-$setNetCfgRequest->NetCfg = $netCfg;
+$setNetCfgRequest->setNetCfg($netCfg);
 
 // TODO 未测试
 Coroutine\run(function () use ($paramSettingMqttClient, $setNetCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setNetCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setNetCfgRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

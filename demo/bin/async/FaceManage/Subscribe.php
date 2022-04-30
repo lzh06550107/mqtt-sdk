@@ -30,7 +30,7 @@ Coroutine\run(function () {
 
     $logger = new DefaultLogger(LogLevel::INFO);
 
-    $asyncMqttClient = new AsyncMqttClient(null, $logger);
+    $asyncMqttClient = new AsyncMqttClient($logger);
 
     $asyncMqttClient->setBrokerHost('128.128.13.90');
     $asyncMqttClient->setBrokerPort(1883);

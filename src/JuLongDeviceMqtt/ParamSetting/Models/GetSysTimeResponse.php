@@ -16,17 +16,65 @@ class GetSysTimeResponse extends AbstractResponse
     /**
      * @var NTPServer 通过时间服务器更新
      */
-    public $NTPServer;
+    private $NTPServer;
 
     /**
      * @var string 本地时间(手动设置模式可用) 格式：yyyy-MM-dd hh:mm:ss
      */
-    public $LocalTime;
+    private $LocalTime;
 
     /**
      * @var int RTC开关 0:关闭；1:开启
      */
-    public $RTCEnabled;
+    private $RTCEnabled;
+
+    /**
+     * @return NTPServer
+     */
+    public function getNTPServer(): NTPServer
+    {
+        return $this->NTPServer;
+    }
+
+    /**
+     * @param NTPServer $NTPServer
+     */
+    public function setNTPServer(NTPServer $NTPServer): void
+    {
+        $this->NTPServer = $NTPServer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalTime(): string
+    {
+        return $this->LocalTime;
+    }
+
+    /**
+     * @param string $LocalTime
+     */
+    public function setLocalTime(string $LocalTime): void
+    {
+        $this->LocalTime = $LocalTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRTCEnabled(): int
+    {
+        return $this->RTCEnabled;
+    }
+
+    /**
+     * @param int $RTCEnabled
+     */
+    public function setRTCEnabled(int $RTCEnabled): void
+    {
+        $this->RTCEnabled = $RTCEnabled;
+    }
 
     public function deserialize($param) {
 

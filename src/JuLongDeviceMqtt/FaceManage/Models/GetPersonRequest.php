@@ -22,32 +22,32 @@ class GetPersonRequest extends AbstractRequest
     /**
      * @var int 名单类型 0：所有名单；1：黑名单；2：白名单；3：VIP名单
      */
-    public $PersonType;
+    private $PersonType;
 
     /**
      * @var int 搜索方式 0：图片；2：特征值；3：人员ID
      */
-    public $SearchType;
+    private $SearchType;
 
     /**
      * @var int|null 相似度阈值，返回大于等于该阈值的人脸，SearchType不为2时必填
      */
-    public $Similarity;
+    private $Similarity;
 
     /**
      * @var string|null 人脸图片(Base64)，SearchType等于0
      */
-    public $FacePicture;
+    private $FacePicture;
 
     /**
      * @var string|null 人员特征值数据(Base64，不可转换为图片)，SearchType等于1
      */
-    public $FeatureValue;
+    private $FeatureValue;
 
     /**
      * @var string|null 人员入库时的ID，SearchType等于2
      */
-    public $PersonId;
+    private $PersonId;
 
     /**
      * 构造函数

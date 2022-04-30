@@ -17,12 +17,44 @@ class GetPictureByFileNameResponse extends AbstractResponse
     /**
      * @var string 图片名
      */
-    public $PictureName;
+    private $PictureName;
 
     /**
      * @var string 图片Base64
      */
-    public $Picture;
+    private $Picture;
+
+    /**
+     * @return string
+     */
+    public function getPictureName(): string
+    {
+        return $this->PictureName;
+    }
+
+    /**
+     * @param string $PictureName
+     */
+    public function setPictureName(string $PictureName): void
+    {
+        $this->PictureName = $PictureName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicture(): string
+    {
+        return $this->Picture;
+    }
+
+    /**
+     * @param string $Picture
+     */
+    public function setPicture(string $Picture): void
+    {
+        $this->Picture = $Picture;
+    }
 
     public function deserialize($param)
     {

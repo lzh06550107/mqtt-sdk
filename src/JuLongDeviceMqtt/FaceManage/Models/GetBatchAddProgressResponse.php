@@ -16,12 +16,44 @@ class GetBatchAddProgressResponse extends AbstractResponse
     /**
      * @var int 图片底库当前总数量
      */
-    public $CompletedNumber;
+    private $CompletedNumber;
 
     /**
      * @var int 待提取数量
      */
-    public $WaitingNumber;
+    private $WaitingNumber;
+
+    /**
+     * @return int
+     */
+    public function getCompletedNumber(): int
+    {
+        return $this->CompletedNumber;
+    }
+
+    /**
+     * @param int $CompletedNumber
+     */
+    public function setCompletedNumber(int $CompletedNumber): void
+    {
+        $this->CompletedNumber = $CompletedNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaitingNumber(): int
+    {
+        return $this->WaitingNumber;
+    }
+
+    /**
+     * @param int $WaitingNumber
+     */
+    public function setWaitingNumber(int $WaitingNumber): void
+    {
+        $this->WaitingNumber = $WaitingNumber;
+    }
 
     public function deserialize($param)
     {

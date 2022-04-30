@@ -16,7 +16,23 @@ class GetMqttCfgResponse extends AbstractResponse
     /**
      * @var MqttCfg $MqttCfg mqtt参数配置类
      */
-    public $MqttCfg;
+    private $MqttCfg;
+
+    /**
+     * @return MqttCfg
+     */
+    public function getMqttCfg(): MqttCfg
+    {
+        return $this->MqttCfg;
+    }
+
+    /**
+     * @param MqttCfg $MqttCfg
+     */
+    public function setMqttCfg(MqttCfg $MqttCfg): void
+    {
+        $this->MqttCfg = $MqttCfg;
+    }
 
     public function deserialize($param) {
 

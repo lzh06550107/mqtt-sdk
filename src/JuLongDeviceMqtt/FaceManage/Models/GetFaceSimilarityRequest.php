@@ -23,27 +23,27 @@ class GetFaceSimilarityRequest extends AbstractRequest
     /**
      * @var int 人脸类型 0：人员照片(Base64)；1：人员特征值数据
      */
-    public $FaceType;
+    private $FaceType;
 
     /**
      * @var string|null 人员照片（Base64编码），FaceType为0必填
      */
-    public $PersonPhoto1;
+    private $PersonPhoto1;
 
     /**
      * @var string|null 人员照片（Base64编码），FaceType为0必填
      */
-    public $PersonPhoto2;
+    private $PersonPhoto2;
 
     /**
      * @var string|null 人员特征值数据(Base64，不可转换为图片)，FaceType为1必填
      */
-    public $FeatureValue1;
+    private $FeatureValue1;
 
     /**
      * @var string|null 人员特征值数据(Base64，不可转换为图片)，FaceType为1必填
      */
-    public $FeatureValue2;
+    private $FeatureValue2;
 
     /**
      * 构造函数

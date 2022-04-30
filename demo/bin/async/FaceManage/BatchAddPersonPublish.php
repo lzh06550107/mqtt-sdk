@@ -30,7 +30,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -123,7 +123,7 @@ $batchAddPersonRequest->setPersonInfo([ $batchAddPersonInfo1, $batchAddPersonInf
 // TODO 测试失败
 Coroutine\run(function () use($faceManageBaseMqttClient, $batchAddPersonRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchAddPersonRequest);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchAddPersonRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

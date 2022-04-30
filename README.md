@@ -276,7 +276,12 @@ try {
 ```php
 <?php
 
-declare(strict_types=1);
+use JuLongDeviceMqtt\Common\DefaultLogger;
+use JuLongDeviceMqtt\FaceManage\Models\AddPersonRequest;
+use JuLongDeviceMqtt\FaceManage\Models\PersonInfo;
+use JuLongDeviceMqtt\SyncMqttClient;
+use Psr\Log\LogLevel;
+use Swoole\Coroutine;
 
 foreach (
     [
@@ -284,6 +289,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -293,70 +299,60 @@ foreach (
     }
 }
 
-use JuLongDeviceMqtt\Common\SyncMqttClient;
-use JuLongDeviceMqtt\FaceManage\Models\AddPersonRequest;
-use JuLongDeviceMqtt\FaceManage\Models\PersonInfo;
-use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
-use Swoole\Coroutine;
+SyncMqttClient::configurator()->setBrokerHost('128.128.13.90')->setBrokerPort(1883)
+    ->setKeepAlive(10)->setDelay(10)->setMaxAttempts(3)->setSwooleConfig([
+        'open_mqtt_protocol' => true,
+        'package_max_length' => 2 * 1024 * 1024,
+        'connect_timeout' => 5.0,
+        'write_timeout' => 5.0,
+        'read_timeout' => 5.0,
+    ])->setLoger(new DefaultLogger(LogLevel::INFO));
 
-$syncMqttClient = new SyncMqttClient();
-
-$syncMqttClient->setBrokerHost('128.128.20.81');
-$syncMqttClient->setBrokerPort(1883);
-$syncMqttClient->setKeepAlive(10);
-$syncMqttClient->setDelay(10);
-$syncMqttClient->setMaxAttempts(3);
-
-$syncMqttClient->setSwooleConfig([
-    'open_mqtt_protocol' => true,
-    'package_max_length' => 2 * 1024 * 1024,
-    'connect_timeout' => 5.0,
-    'write_timeout' => 5.0,
-    'read_timeout' => 5.0,
-]);
-
-$faceManageMqttClient = new SyncFaceManageMqttClient($syncMqttClient);
+$faceManageBaseMqttClient = SyncMqttClient::syncFaceManageMqttClient(); // 获取同步客户端
 
 $addPersonRequest = new AddPersonRequest();
 
-$addPersonRequest->PersonCover = 1;
-$addPersonRequest->PersonType = 2;
+$addPersonRequest->setPersonCover(1);
+$addPersonRequest->setPersonType(2);
 
 $personInfo = new PersonInfo();
 
-$personInfo->PersonId = '1'; // 注意，这里必须是字符串，否则，会出现各种奇葩的问题
-$personInfo->ICCard = 'id1';
-$personInfo->ICCardList = [
+$personInfo->setPersonId('1'); // 注意，这里必须是字符串，否则，会出现各种奇葩的问题
+$personInfo->setICCard('id1');
+$personInfo->setICCardList([
     "321281199002271070",
     "321281199002271071"
-];
-$personInfo->IDCard = '321281199002271069';
-$personInfo->PersonName = 'test';
-$personInfo->Sex = 1;
-$personInfo->Nation = '广东';
-$personInfo->Birthday = '1990-09-12';
-$personInfo->Phone = '13654124584';
-$personInfo->Address = '广东省广州市';
-$personInfo->LimitTime = 0;
-$personInfo->StartTime = '2020-09-12 09:10:00';
-$personInfo->EndTime = '2021-09-12 09:10:00';
-$personInfo->PersonIdentity = 0;
-$personInfo->IdentityAttribute = 0;
+]);
+$personInfo->setIDCard('321281199002271069');
+$personInfo->setPersonName('test');
+$personInfo->setSex(1);
+$personInfo->setNation('广东');
+$personInfo->setBirthday('1990-09-12');
+$personInfo->setPhone('13654124584');
+$personInfo->setAddress('广东省广州市');
+$personInfo->setLimitTime(0);
+$personInfo->setStartTime('2020-09-12 09:10:00');
+$personInfo->setEndTime('2021-09-12 09:10:00');
+$personInfo->setPersonIdentity(0);
+$personInfo->setIdentityAttribute(0);
 ///////////使用图片链接开始/////////////////
-//$personInfo->PhotoType = 0;
-//$personInfo->PersonPhotoUrl = 'http://qczxadmin.jvt.cc/temp/image/2021/11/901d316b7b30d3ca.jpg';
+//$personInfo->setPhotoType(0);
+//$personInfo->setPersonPhotoUrl('http://qczxadmin.jvt.cc/temp/image/2021/11/901d316b7b30d3ca.jpg');
 ///////////使用图片链接结束/////////////////
-$personInfo->PhotoType = 1;
-$personInfo->PersonPhoto = 'base64编码图片';
+$personInfo->setPhotoType(1);
+$personInfo->setPersonPhoto ('base64编码图片');
 
-$addPersonRequest->PersonInfo = $personInfo;
+$addPersonRequest->setPersonInfo($personInfo);
 
-try {
-    $result = $faceManageMqttClient->request('fwSkNfgI4JKljlkM', $addPersonRequest);
-    print_r($result);
-} catch (\JuLongDeviceMqtt\Exception\MqttException $e) {
-    echo $e->getMessage();
-}
+Coroutine\run(function () use($faceManageBaseMqttClient, $addPersonRequest) {
+    try {
+        $result = $faceManageBaseMqttClient->request('fwSkNfgI4JKljlkM', $addPersonRequest);
+        print_r($result);
+    } catch (\JuLongDeviceMqtt\Exception\MqttException $e) {
+        echo $e->getMessage();
+    }
+});
+
 ```
 
 ## 配置选项

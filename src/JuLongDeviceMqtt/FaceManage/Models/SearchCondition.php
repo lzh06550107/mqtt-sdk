@@ -21,52 +21,52 @@ class SearchCondition extends AbstractModel
     /**
      * @var int 查找方式 0：条件查找；1：姓名模糊查找；2：重复身份证号查找；3：重复门禁卡号查找
      */
-    public $SearchMethod;
+    private $SearchMethod;
 
     /**
      * @var string|null 姓名，SearchMethod为1时必填
      */
-    public $Name;
+    private $Name;
 
     /**
      * @var string|null 人员有效开始时间 格式: yyyy-mm-dd hh:mm:ss，SearchMethod为0时必填
      */
-    public $StartTime;
+    private $StartTime;
 
     /**
      * @var string|null 人员有效开始时间 格式: yyyy-mm-dd hh:mm:ss，SearchMethod为0时必填
      */
-    public $EndTime;
+    private $EndTime;
 
     /**
      * @var int|null 名单时效 0：永久有效；1：临时有效；2：所有，SearchMethod为0时必填
      */
-    public $LimitTime;
+    private $LimitTime;
 
     /**
      * @var int|null 人员身份类型，用于名单分类 0：所有；1：老师；2：走读(学生)；3：寄宿(学生)；4：访客，SearchMethod为0时必填
      */
-    public $PersonIdentity;
+    private $PersonIdentity;
 
     /**
      * @var int[]|null 通行策略ID
      */
-    public $StrategyId;
+    private $StrategyId;
 
     /**
      * @var int|null 性别 0：所有；1：男；2：女，SearchMethod为0时必填
      */
-    public $Sex;
+    private $Sex;
 
     /**
      * @var int[]|null 年龄范围，SearchMethod为0时必填
      */
-    public $AgeRange;
+    private $AgeRange;
 
     /**
      * @var int|null 人员ID(对应页面门禁卡号)，SearchMethod为0时可选
      */
-    public $PersonId;
+    private $PersonId;
 
     /**
      * @return int

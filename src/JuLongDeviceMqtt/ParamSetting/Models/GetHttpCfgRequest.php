@@ -24,6 +24,6 @@ class GetHttpCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::GET_HTTP_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::GET_HTTP_CFG); // 初始化动作名称
     }
 }

@@ -18,9 +18,41 @@ use JuLongDeviceMqtt\Common\AbstractModel;
  */
 class PicturePrefix extends AbstractModel
 {
-    public $PictureEnabled;
+    private $PictureEnabled;
 
-    public $CustomPrefix;
+    private $CustomPrefix;
+
+    /**
+     * @return mixed
+     */
+    public function getPictureEnabled()
+    {
+        return $this->PictureEnabled;
+    }
+
+    /**
+     * @param mixed $PictureEnabled
+     */
+    public function setPictureEnabled($PictureEnabled): void
+    {
+        $this->PictureEnabled = $PictureEnabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomPrefix()
+    {
+        return $this->CustomPrefix;
+    }
+
+    /**
+     * @param mixed $CustomPrefix
+     */
+    public function setCustomPrefix($CustomPrefix): void
+    {
+        $this->CustomPrefix = $CustomPrefix;
+    }
 
     public function deserialize($param)
     {

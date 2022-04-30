@@ -21,32 +21,128 @@ class FaceAttribute extends AbstractModel
     /**
      * @var int 年龄
      */
-    public $Age;
+    private $Age;
 
     /**
      * @var int 性别 1：男；2：女
      */
-    public $Gender;
+    private $Gender;
 
     /**
      * @var int 佩戴眼镜 0：不戴眼镜；1：戴眼镜；2：戴太阳镜
      */
-    public $Glasses;
+    private $Glasses;
 
     /**
      * @var int 口罩/面具 0：不佩戴口罩/面具；1：佩戴口罩/面具
      */
-    public $Mask;
+    private $Mask;
 
     /**
      * @var int 胡子 0：没有胡子；1：有胡子
      */
-    public $Beard;
+    private $Beard;
 
     /**
      * @var int 皮肤种族 1：黄种人；2：黑种人；3：白种人
      */
-    public $Race;
+    private $Race;
+
+    /**
+     * @return int
+     */
+    public function getAge(): int
+    {
+        return $this->Age;
+    }
+
+    /**
+     * @param int $Age
+     */
+    public function setAge(int $Age): void
+    {
+        $this->Age = $Age;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGender(): int
+    {
+        return $this->Gender;
+    }
+
+    /**
+     * @param int $Gender
+     */
+    public function setGender(int $Gender): void
+    {
+        $this->Gender = $Gender;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGlasses(): int
+    {
+        return $this->Glasses;
+    }
+
+    /**
+     * @param int $Glasses
+     */
+    public function setGlasses(int $Glasses): void
+    {
+        $this->Glasses = $Glasses;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMask(): int
+    {
+        return $this->Mask;
+    }
+
+    /**
+     * @param int $Mask
+     */
+    public function setMask(int $Mask): void
+    {
+        $this->Mask = $Mask;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBeard(): int
+    {
+        return $this->Beard;
+    }
+
+    /**
+     * @param int $Beard
+     */
+    public function setBeard(int $Beard): void
+    {
+        $this->Beard = $Beard;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRace(): int
+    {
+        return $this->Race;
+    }
+
+    /**
+     * @param int $Race
+     */
+    public function setRace(int $Race): void
+    {
+        $this->Race = $Race;
+    }
 
     public function deserialize($param)
     {

@@ -48,11 +48,11 @@ class SyncUserMqttClient
         }
 
         if (!isset($publishTopicInfo['dup'])) {
-            $publishTopicInfo['dup'] = 0;
+            $publishTopicInfo['dup'] = false;
         }
 
         if (!isset($publishTopicInfo['retain'])) {
-            $publishTopicInfo['retain'] = 0;
+            $publishTopicInfo['retain'] = false;
         }
 
         if (!isset($publishTopicInfo['properties'])) {

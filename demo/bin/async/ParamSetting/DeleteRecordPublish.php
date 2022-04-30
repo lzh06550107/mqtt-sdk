@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,11 +19,15 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\DeleteRecordRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -41,14 +46,13 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $deleteRecordRequest = new DeleteRecordRequest();
-$deleteRecordRequest->Mode = 1;
-$deleteRecordRequest->BeginTime = "2020-12-14 11:00:00";
-$deleteRecordRequest->EndTime = "2022-12-14 11:00:00";
+$deleteRecordRequest->setMode(1);
+$deleteRecordRequest->setBeginTime("2020-12-14 11:00:00");
+$deleteRecordRequest->setEndTime("2022-12-14 11:00:00");
 
 Coroutine\run(function () use($paramSettingMqttClient, $deleteRecordRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $deleteRecordRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $deleteRecordRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

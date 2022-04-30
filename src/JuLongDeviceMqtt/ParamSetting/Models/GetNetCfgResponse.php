@@ -16,7 +16,23 @@ class GetNetCfgResponse extends AbstractResponse
     /**
      * @var NetCfg 网络参数配置类
      */
-    public $NetCfg;
+    private $NetCfg;
+
+    /**
+     * @return NetCfg
+     */
+    public function getNetCfg(): NetCfg
+    {
+        return $this->NetCfg;
+    }
+
+    /**
+     * @param NetCfg $NetCfg
+     */
+    public function setNetCfg(NetCfg $NetCfg): void
+    {
+        $this->NetCfg = $NetCfg;
+    }
 
     public function deserialize($param) {
 

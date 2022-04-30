@@ -17,32 +17,128 @@ class GetPersonListResponse extends AbstractResponse
     /**
      * @var int 名单类型 1：黑名单；2：白名单；3：VIP名单
      */
-    public $PersonType;
+    private $PersonType;
 
     /**
      * @var int 该名单总人数
      */
-    public $PersonNum;
+    private $PersonNum;
 
     /**
      * @var int 总页数
      */
-    public $PageTotalNO;
+    private $PageTotalNO;
 
     /**
      * @var int 当前要获取的页码
      */
-    public $PageCurNO;
+    private $PageCurNO;
 
     /**
      * @var int 指定页号返回的实际名单数目
      */
-    public $NameCount;
+    private $NameCount;
 
     /**
      * @var PersonInfo[] 获取到的名单列表
      */
-    public $PersonList;
+    private $PersonList;
+
+    /**
+     * @return int
+     */
+    public function getPersonType(): int
+    {
+        return $this->PersonType;
+    }
+
+    /**
+     * @param int $PersonType
+     */
+    public function setPersonType(int $PersonType): void
+    {
+        $this->PersonType = $PersonType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPersonNum(): int
+    {
+        return $this->PersonNum;
+    }
+
+    /**
+     * @param int $PersonNum
+     */
+    public function setPersonNum(int $PersonNum): void
+    {
+        $this->PersonNum = $PersonNum;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPageTotalNO(): int
+    {
+        return $this->PageTotalNO;
+    }
+
+    /**
+     * @param int $PageTotalNO
+     */
+    public function setPageTotalNO(int $PageTotalNO): void
+    {
+        $this->PageTotalNO = $PageTotalNO;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPageCurNO(): int
+    {
+        return $this->PageCurNO;
+    }
+
+    /**
+     * @param int $PageCurNO
+     */
+    public function setPageCurNO(int $PageCurNO): void
+    {
+        $this->PageCurNO = $PageCurNO;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNameCount(): int
+    {
+        return $this->NameCount;
+    }
+
+    /**
+     * @param int $NameCount
+     */
+    public function setNameCount(int $NameCount): void
+    {
+        $this->NameCount = $NameCount;
+    }
+
+    /**
+     * @return PersonInfo[]
+     */
+    public function getPersonList(): array
+    {
+        return $this->PersonList;
+    }
+
+    /**
+     * @param PersonInfo[] $PersonList
+     */
+    public function setPersonList(array $PersonList): void
+    {
+        $this->PersonList = $PersonList;
+    }
 
     public function deserialize($param) {
 

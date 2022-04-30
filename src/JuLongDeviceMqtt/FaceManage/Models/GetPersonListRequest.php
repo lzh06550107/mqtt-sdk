@@ -22,22 +22,22 @@ class GetPersonListRequest extends AbstractRequest
     /**
      * @var int 名单类型 1：黑名单；2：白名单；3：VIP名单
      */
-    public $PersonType;
+    private $PersonType;
 
     /**
      * @var SearchCondition|null 搜索条件
      */
-    public $SearchCondition;
+    private $SearchCondition;
 
     /**
      * @var int 当前页码
      */
-    public $PageCurNO;
+    private $PageCurNO;
 
     /**
      * @var int 当前页需要返回的记录数
      */
-    public $NameCount;
+    private $NameCount;
 
     /**
      * 构造函数

@@ -21,12 +21,44 @@ class GetAlarmCfgResponse extends AbstractResponse
     /**
      * @var int 通道号(NVR服务器需要用到，该通道号对应前端IPC)
      */
-    public $ChannelNo;
+    private $ChannelNo;
 
     /**
      * @var AlarmCfg 人脸识别报警参数配置类
      */
-    public $AlarmCfg;
+    private $AlarmCfg;
+
+    /**
+     * @return int
+     */
+    public function getChannelNo(): int
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param int $ChannelNo
+     */
+    public function setChannelNo(int $ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
+
+    /**
+     * @return AlarmCfg
+     */
+    public function getAlarmCfg(): AlarmCfg
+    {
+        return $this->AlarmCfg;
+    }
+
+    /**
+     * @param AlarmCfg $AlarmCfg
+     */
+    public function setAlarmCfg(AlarmCfg $AlarmCfg): void
+    {
+        $this->AlarmCfg = $AlarmCfg;
+    }
 
     public function deserialize($param) {
 

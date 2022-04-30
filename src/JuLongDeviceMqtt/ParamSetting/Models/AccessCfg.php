@@ -21,17 +21,65 @@ class AccessCfg extends AbstractModel
     /**
      * @var TempAndMask 温度和口罩设置
      */
-    public $TempAndMask;
+    private $TempAndMask;
 
     /**
      * @var AccessControl 门禁控制
      */
-    public $AccessControl;
+    private $AccessControl;
 
     /**
      * @var GateControl 闸机控制
      */
-    public $GateControl;
+    private $GateControl;
+
+    /**
+     * @return TempAndMask
+     */
+    public function getTempAndMask(): TempAndMask
+    {
+        return $this->TempAndMask;
+    }
+
+    /**
+     * @param TempAndMask $TempAndMask
+     */
+    public function setTempAndMask(TempAndMask $TempAndMask): void
+    {
+        $this->TempAndMask = $TempAndMask;
+    }
+
+    /**
+     * @return AccessControl
+     */
+    public function getAccessControl(): AccessControl
+    {
+        return $this->AccessControl;
+    }
+
+    /**
+     * @param AccessControl $AccessControl
+     */
+    public function setAccessControl(AccessControl $AccessControl): void
+    {
+        $this->AccessControl = $AccessControl;
+    }
+
+    /**
+     * @return GateControl
+     */
+    public function getGateControl(): GateControl
+    {
+        return $this->GateControl;
+    }
+
+    /**
+     * @param GateControl $GateControl
+     */
+    public function setGateControl(GateControl $GateControl): void
+    {
+        $this->GateControl = $GateControl;
+    }
 
     public function deserialize($param)
     {

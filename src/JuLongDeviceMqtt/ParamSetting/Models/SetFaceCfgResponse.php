@@ -16,7 +16,7 @@ class SetFaceCfgResponse extends AbstractResponse
     /**
      * @var int 通道号(NVR服务器需要用到，该通道号对应前端IPC)
      */
-    public $ChannelNo;
+    private $ChannelNo;
 
     public function deserialize($param) {
 
@@ -31,4 +31,21 @@ class SetFaceCfgResponse extends AbstractResponse
         }
 
     }
+
+    /**
+     * @return int
+     */
+    public function getChannelNo(): int
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param int $ChannelNo
+     */
+    public function setChannelNo(int $ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
+
 }

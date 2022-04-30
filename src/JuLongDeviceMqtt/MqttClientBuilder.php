@@ -14,6 +14,7 @@ use JuLongDeviceMqtt\FaceManage\AsyncFaceManageMqttClient;
 use JuLongDeviceMqtt\FaceManage\SyncFaceManageMqttClient;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
 use JuLongDeviceMqtt\ParamSetting\SyncParamSettingMqttClient;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use Simps\MQTT\Config\ClientConfig;
@@ -36,6 +37,11 @@ final class MqttClientBuilder extends ClientConfig
      * @var int 中间件服务端口
      */
     private $brokerPort;
+
+    /**
+     * @var LoggerInterface 日志接口
+     */
+    private $loger;
 
     /**
      * @return string
@@ -72,6 +78,22 @@ final class MqttClientBuilder extends ClientConfig
     }
 
     /**
+     * @return LoggerInterface
+     */
+    public function getLoger(): LoggerInterface
+    {
+        return $this->loger;
+    }
+
+    /**
+     * @param LoggerInterface $loger
+     */
+    public function setLoger(LoggerInterface $loger): void
+    {
+        $this->loger = $loger;
+    }
+
+    /**
      * 获取人脸管理同步客户端
      * @return SyncFaceManageMqttClient
      * @author LZH
@@ -79,7 +101,7 @@ final class MqttClientBuilder extends ClientConfig
      */
     public function getSyncFaceManageMqttClient() : SyncFaceManageMqttClient
     {
-        $syncMqttClient = new SyncMqttClient();
+        $syncMqttClient = new SyncMqttClient($this->getLoger());
         $this->copyValue($syncMqttClient);
         return new SyncFaceManageMqttClient($syncMqttClient);
     }
@@ -92,7 +114,7 @@ final class MqttClientBuilder extends ClientConfig
      */
     public function getAsyncFaceManageMqttClient() : AsyncFaceManageMqttClient
     {
-        $asyncMqttClient = new AsyncMqttClient();
+        $asyncMqttClient = new AsyncMqttClient($this->getLoger());
         $this->copyValue($asyncMqttClient);
         return new AsyncFaceManageMqttClient($asyncMqttClient);
     }
@@ -105,7 +127,7 @@ final class MqttClientBuilder extends ClientConfig
      */
     public function getSyncParamSettingMqttClient() : SyncParamSettingMqttClient
     {
-        $syncMqttClient = new SyncMqttClient();
+        $syncMqttClient = new SyncMqttClient($this->getLoger());
         $this->copyValue($syncMqttClient);
         return new SyncParamSettingMqttClient($syncMqttClient);
     }
@@ -118,7 +140,7 @@ final class MqttClientBuilder extends ClientConfig
      */
     public function getAsyncParamSettingMqttClient() : AsyncParamSettingMqttClient
     {
-        $asyncMqttClient = new AsyncMqttClient();
+        $asyncMqttClient = new AsyncMqttClient($this->getLoger());
         $this->copyValue($asyncMqttClient);
         return new AsyncParamSettingMqttClient($asyncMqttClient);
     }

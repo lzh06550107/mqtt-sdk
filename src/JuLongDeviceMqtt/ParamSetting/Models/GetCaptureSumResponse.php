@@ -16,7 +16,23 @@ class GetCaptureSumResponse extends AbstractResponse
     /**
      * @var int 抓拍数
      */
-    public $CaptureSum;
+    private $CaptureSum;
+
+    /**
+     * @return int
+     */
+    public function getCaptureSum(): int
+    {
+        return $this->CaptureSum;
+    }
+
+    /**
+     * @param int $CaptureSum
+     */
+    public function setCaptureSum(int $CaptureSum): void
+    {
+        $this->CaptureSum = $CaptureSum;
+    }
 
     public function deserialize($param) {
 

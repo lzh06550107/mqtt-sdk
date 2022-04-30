@@ -27,7 +27,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -51,7 +51,7 @@ $deletePersonListRequest->setPersonType(2); // 删除白名单
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $deletePersonListRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $deletePersonListRequest, 1);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $deletePersonListRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

@@ -21,7 +21,23 @@ class GetAccessCfgResponse extends AbstractResponse
     /**
      * @var AccessCfg $AccessCfg 测温机门禁控制参数配置对象
      */
-    public $AccessCfg;
+    private $AccessCfg;
+
+    /**
+     * @return AccessCfg
+     */
+    public function getAccessCfg(): AccessCfg
+    {
+        return $this->AccessCfg;
+    }
+
+    /**
+     * @param AccessCfg $AccessCfg
+     */
+    public function setAccessCfg(AccessCfg $AccessCfg): void
+    {
+        $this->AccessCfg = $AccessCfg;
+    }
 
     public function deserialize($param) {
 

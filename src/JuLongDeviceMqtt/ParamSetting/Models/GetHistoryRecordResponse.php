@@ -16,12 +16,44 @@ class GetHistoryRecordResponse extends AbstractResponse
     /**
      * @var int 历史数据上传状态 0：空闲；1：上传中
      */
-    public $Status;
+    private $Status;
 
     /**
      * @var int 本次将上报的数目
      */
-    public $TotalCount;
+    private $TotalCount;
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @param int $Status
+     */
+    public function setStatus(int $Status): void
+    {
+        $this->Status = $Status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalCount(): int
+    {
+        return $this->TotalCount;
+    }
+
+    /**
+     * @param int $TotalCount
+     */
+    public function setTotalCount(int $TotalCount): void
+    {
+        $this->TotalCount = $TotalCount;
+    }
 
     public function deserialize($param) {
 

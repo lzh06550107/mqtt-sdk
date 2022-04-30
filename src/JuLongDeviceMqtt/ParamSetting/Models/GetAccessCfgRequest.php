@@ -25,6 +25,6 @@ class GetAccessCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::GET_ACCESS_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::GET_ACCESS_CFG); // 初始化动作名称
     }
 }

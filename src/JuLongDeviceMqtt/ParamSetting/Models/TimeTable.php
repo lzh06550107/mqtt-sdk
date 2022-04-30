@@ -21,17 +21,65 @@ class TimeTable extends AbstractModel
     /**
      * @var int 时间段启用 0：不启用；1：启用
      */
-    public $TimeEnable;
+    private $TimeEnable;
 
     /**
      * @var string 开始时间 格式:hh:mm:ss(精确到分钟)
      */
-    public $TimeBegin;
+    private $TimeBegin;
 
     /**
      * @var string 结束时间 格式:hh:mm:ss(精确到分钟)
      */
-    public $TimeEnd;
+    private $TimeEnd;
+
+    /**
+     * @return int
+     */
+    public function getTimeEnable(): int
+    {
+        return $this->TimeEnable;
+    }
+
+    /**
+     * @param int $TimeEnable
+     */
+    public function setTimeEnable(int $TimeEnable): void
+    {
+        $this->TimeEnable = $TimeEnable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeBegin(): string
+    {
+        return $this->TimeBegin;
+    }
+
+    /**
+     * @param string $TimeBegin
+     */
+    public function setTimeBegin(string $TimeBegin): void
+    {
+        $this->TimeBegin = $TimeBegin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeEnd(): string
+    {
+        return $this->TimeEnd;
+    }
+
+    /**
+     * @param string $TimeEnd
+     */
+    public function setTimeEnd(string $TimeEnd): void
+    {
+        $this->TimeEnd = $TimeEnd;
+    }
 
     public function deserialize($param)
     {

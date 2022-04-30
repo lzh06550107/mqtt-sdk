@@ -27,7 +27,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -54,7 +54,7 @@ $getFaceSimilarityRequest->setPersonPhoto2( '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAE
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $getFaceSimilarityRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getFaceSimilarityRequest, 1);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getFaceSimilarityRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,14 +19,18 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\CaptureContent;
 use JuLongDeviceMqtt\ParamSetting\Models\HttpCfg;
 use JuLongDeviceMqtt\ParamSetting\Models\PictureData;
 use JuLongDeviceMqtt\ParamSetting\Models\SetHttpCfgRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -45,47 +50,46 @@ $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $setHttpCfgRequest = new SetHttpCfgRequest();
 $httpCfg = new HttpCfg();
-$httpCfg->CaptureEnabled = 1;
-$httpCfg->CaptureAddress = "http://ip:port/path";
-$httpCfg->CaptureType = 1;
+$httpCfg->setCaptureEnabled(1);
+$httpCfg->setCaptureAddress("http://ip:port/path");
+$httpCfg->setCaptureType(1);
 
 $captureContent = new CaptureContent();
-$captureContent->FaceInfo = 1;
-$captureContent->CompareInfo = 1;
+$captureContent->setFaceInfo(1);
+$captureContent->setCompareInfo(1);
 
-$httpCfg->CaptureContent = $captureContent;
+$httpCfg->setCaptureContent($captureContent);
 
 $pictureData = new PictureData();
-$pictureData->FacePicture = 1;
-$pictureData->BodyPicture = 1;
-$pictureData->BackgroundPicture = 1;
-$pictureData->PersonPhoto = 1;
+$pictureData->setFacePicture(1);
+$pictureData->setBodyPicture(1);
+$pictureData->setBackgroundPicture(1);
+$pictureData->setPersonPhoto(1);
 
-$httpCfg->PictureData = $pictureData;
+$httpCfg->setPictureData($pictureData);
 
-$httpCfg->ResendTimes = 1;
-$httpCfg->RegisterEnabled = 1;
-$httpCfg->RegisterAddress = "http://ip:port/path";
-$httpCfg->HeartbeatEnabled = 1;
-$httpCfg->HeartbeatAddress = "http://ip:port/path";
-$httpCfg->HeartbeatInterval = 60;
-$httpCfg->EventAddress = "http://ip:port/path";
-$httpCfg->ResultAddress = "http://ip:port/path";
-$httpCfg->MiddlewareEnabled = 0;
-$httpCfg->MiddlewareAddress = "http://ip:port/path";
-$httpCfg->SignCheck = 1;
-$httpCfg->Mode = 0;
-$httpCfg->VerifyAddress = "http://server/path";
-$httpCfg->NoticeAddress = "http://server/path";
-$httpCfg->HistoryRecordAddress = "http://server/path";
-$httpCfg->HTTPVersion = 1;
+$httpCfg->setResendTimes(1);
+$httpCfg->setRegisterEnabled(1);
+$httpCfg->setRegisterAddress("http://ip:port/path");
+$httpCfg->setHeartbeatEnabled(1);
+$httpCfg->setHeartbeatAddress("http://ip:port/path");
+$httpCfg->setHeartbeatInterval(60);
+$httpCfg->setEventAddress("http://ip:port/path");
+$httpCfg->setResultAddress("http://ip:port/path");
+$httpCfg->setMiddlewareEnabled(0);
+$httpCfg->setMiddlewareAddress("http://ip:port/path");
+$httpCfg->setSignCheck(1);
+$httpCfg->setMode(0);
+$httpCfg->setVerifyAddress("http://server/path");
+$httpCfg->setNoticeAddress("http://server/path");
+$httpCfg->setHistoryRecordAddress("http://server/path");
+$httpCfg->setHTTPVersion('1');
 
 $setHttpCfgRequest->HttpCfg = $httpCfg;
 
 Coroutine\run(function () use ($paramSettingMqttClient, $setHttpCfgRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setHttpCfgRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setHttpCfgRequest, 1);
     Coroutine::sleep(3);
 //    }
 });

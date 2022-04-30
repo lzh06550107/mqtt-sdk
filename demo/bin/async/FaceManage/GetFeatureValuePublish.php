@@ -28,7 +28,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -52,7 +52,7 @@ $getFeatureValueRequest->setFacePicture ('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAEBAQ
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $getFeatureValueRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getFeatureValueRequest, 1);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getFeatureValueRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

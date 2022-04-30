@@ -11,8 +11,6 @@ namespace JuLongDeviceMqtt\FaceManage\Models;
 
 use JuLongDeviceMqtt\Common\AbstractRequest;
 use JuLongDeviceMqtt\FaceManage\FaceManageAction;
-use ReflectionClass;
-use ReflectionMethod;
 
 /**
  * 添加人员信息
@@ -35,7 +33,6 @@ class AddPersonRequest extends AbstractRequest
      * @var int 名单类型 1：黑名单；2：白名单；3：VIP名单
      */
     private $personType;
-
 
     /**
      * 构造函数

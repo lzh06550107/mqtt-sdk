@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,12 +19,16 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\NTPServer;
 use JuLongDeviceMqtt\ParamSetting\Models\SetSysTimeRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -42,19 +47,18 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $setSysTimeRequest = new SetSysTimeRequest();
-$setSysTimeRequest->RTCEnabled = 1;
+$setSysTimeRequest->setRTCEnabled(1);
 $ntpServer = new NTPServer();
-$ntpServer->Server = "ntp1.aliyun.com";
-$ntpServer->Port = 123;
-$ntpServer->UpdateInterval = 60;
-$ntpServer->TimeZone = 31;
-$setSysTimeRequest->NTPServer = $ntpServer;
+$ntpServer->setServer("ntp1.aliyun.com");
+$ntpServer->setPort(123);
+$ntpServer->setUpdateInterval(60);
+$ntpServer->setTimeZone(31);
+$setSysTimeRequest->setNTPServer($ntpServer);
 
 // TODO 测试未通过
 Coroutine\run(function () use ($paramSettingMqttClient, $setSysTimeRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setSysTimeRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $setSysTimeRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

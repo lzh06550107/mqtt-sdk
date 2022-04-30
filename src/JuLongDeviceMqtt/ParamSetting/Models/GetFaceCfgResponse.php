@@ -21,7 +21,23 @@ class GetFaceCfgResponse extends AbstractResponse
     /**
      * @var FaceCfg 人脸配置类
      */
-    public $FaceCfg;
+    private $FaceCfg;
+
+    /**
+     * @return FaceCfg
+     */
+    public function getFaceCfg(): FaceCfg
+    {
+        return $this->FaceCfg;
+    }
+
+    /**
+     * @param FaceCfg $FaceCfg
+     */
+    public function setFaceCfg(FaceCfg $FaceCfg): void
+    {
+        $this->FaceCfg = $FaceCfg;
+    }
 
     public function deserialize($param) {
 

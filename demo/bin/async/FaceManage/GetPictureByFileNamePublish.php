@@ -27,7 +27,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -50,7 +50,7 @@ $getPictureByFileNameRequest->setPicturePath('/sd/data/Allsnappath/0/FACE_110000
 
 Coroutine\run(function () use($faceManageBaseMqttClient, $getPictureByFileNameRequest) {
 //    while (true) {
-    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPictureByFileNameRequest, 1);
+    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $getPictureByFileNameRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

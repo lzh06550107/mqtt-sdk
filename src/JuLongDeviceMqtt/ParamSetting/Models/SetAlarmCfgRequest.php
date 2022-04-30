@@ -17,18 +17,18 @@ use JuLongDeviceMqtt\ParamSetting\ParamSettingAction;
  * Created on 2022/2/12 14:50
  * Create by LZH
  *
- * @property AlarmCfg $AlarmCfg 人脸识别报警参数配置类
+ * @method setAlarmCfg(AlarmCfg $AlarmCfg) 人脸识别报警参数配置类
  */
 class SetAlarmCfgRequest extends AbstractRequest
 {
-    public $ChannelNo;
+    private $ChannelNo;
 
     /**
      * 构造函数
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_ALARM_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_ALARM_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用
@@ -40,4 +40,21 @@ class SetAlarmCfgRequest extends AbstractRequest
             $this->$property = $value;
         }
     }
+
+    /**
+     * @return mixed
+     */
+    public function getChannelNo()
+    {
+        return $this->ChannelNo;
+    }
+
+    /**
+     * @param mixed $ChannelNo
+     */
+    public function setChannelNo($ChannelNo): void
+    {
+        $this->ChannelNo = $ChannelNo;
+    }
+
 }

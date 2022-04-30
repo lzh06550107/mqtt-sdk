@@ -22,12 +22,12 @@ class DeletePersonRequest extends AbstractRequest
     /**
      * @var int 名单类型 1：黑名单；2：白名单；3：VIP名单
      */
-    public $PersonType;
+    private $PersonType;
 
     /**
      * @var string 人员ID
      */
-    public $PersonId;
+    private $PersonId;
 
     /**
      * 构造函数

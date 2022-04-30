@@ -16,12 +16,44 @@ class GetFeatureValueResponse extends AbstractResponse
     /**
      * @var int 特征值类型 0：float；1：char；2：int；3：通用类型
      */
-    public $FeatureType;
+    private $FeatureType;
 
     /**
      * @var string 人员特征值数据(Base64，不可转换为图片)
      */
-    public $FeatureValue;
+    private $FeatureValue;
+
+    /**
+     * @return int
+     */
+    public function getFeatureType(): int
+    {
+        return $this->FeatureType;
+    }
+
+    /**
+     * @param int $FeatureType
+     */
+    public function setFeatureType(int $FeatureType): void
+    {
+        $this->FeatureType = $FeatureType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeatureValue(): string
+    {
+        return $this->FeatureValue;
+    }
+
+    /**
+     * @param string $FeatureValue
+     */
+    public function setFeatureValue(string $FeatureValue): void
+    {
+        $this->FeatureValue = $FeatureValue;
+    }
 
     public function deserialize($param) {
 

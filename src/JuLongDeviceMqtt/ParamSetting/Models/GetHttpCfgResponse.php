@@ -22,7 +22,23 @@ class GetHttpCfgResponse extends AbstractResponse
     /**
      * @var HttpCfg http参数配置
      */
-    public $HttpCfg;
+    private $HttpCfg;
+
+    /**
+     * @return HttpCfg
+     */
+    public function getHttpCfg(): HttpCfg
+    {
+        return $this->HttpCfg;
+    }
+
+    /**
+     * @param HttpCfg $HttpCfg
+     */
+    public function setHttpCfg(HttpCfg $HttpCfg): void
+    {
+        $this->HttpCfg = $HttpCfg;
+    }
 
     public function deserialize($param) {
 

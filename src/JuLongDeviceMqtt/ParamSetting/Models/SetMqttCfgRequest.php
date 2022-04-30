@@ -26,7 +26,7 @@ class SetMqttCfgRequest extends AbstractRequest
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_MQTT_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_MQTT_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用

@@ -21,112 +21,464 @@ class FaceCfg extends AbstractModel
     /**
      * @var int 人脸识别功能开关 0：关闭；1：开启
      */
-    public $FaceEnabled;
+    private $FaceEnabled;
 
     /**
      * @var int 人脸识别灵敏度
      */
-    public $Sensitivity;
+    private $Sensitivity;
 
     /**
      * @var int 抓拍模式 0：离开后抓拍（距离优先）；1：快速抓拍；2：间隔抓拍（以秒为单位）；3：间隔抓拍（以秒为单位）；4：单人模式（门禁机仅有该模式）；5：离开后抓拍(质量选优)；6：快速+离开后抓拍(抓拍机没有该选项)；7：全抓模式
      */
-    public $CaptureMode;
+    private $CaptureMode;
 
     /**
      * @var CaptureModeParam 各抓拍模式下所需参数
      */
-    public $CaptureModeParam;
+    private $CaptureModeParam;
 
     /**
      * @var int 人脸识别最大像素
      */
-    public $MaxFaceSize;
+    private $MaxFaceSize;
 
     /**
      * @var int 人脸识别最小像素
      */
-    public $MinFaceSize;
+    private $MinFaceSize;
 
     /**
      * @var int 人脸周边区域扩展系数(抓拍机特有)
      */
-    public $FaceAreaSize;
+    private $FaceAreaSize;
 
     /**
      * @var int 人脸测温最小像素(测温机特有)
      */
-    public $MinFaceTempSize;
+    private $MinFaceTempSize;
 
     /**
      * @var int 人脸识别场景模式 0：常规模式；1：大堂模式
      */
-    public $SceneMode;
+    private $SceneMode;
 
     /**
      * @var int 人脸跟踪框 0：关闭；1：开启
      */
-    public $FaceTrackEnabled;
+    private $FaceTrackEnabled;
 
     /**
      * @var int FTP 上传人脸抓拍 0：关闭；1：开启
      */
-    public $FTPUploadEnabled;
+    private $FTPUploadEnabled;
 
     /**
      * @var int 私有协议上传（抓拍机特有） 0：关闭；1：开启
      */
-    public $PrivateProtocol;
+    private $PrivateProtocol;
 
     /**
      * @var int 图片上传格式 0：人脸图片；1：场景原图；2：人脸及原图
      */
-    public $PictureMode;
+    private $PictureMode;
 
     /**
      * @var int 人脸图片质量
      */
-    public $FacePictureQuality;
+    private $FacePictureQuality;
 
     /**
      * @var int 场景图片质量，PictureMode为1、2时有效
      */
-    public $ScenePictureQuality;
+    private $ScenePictureQuality;
 
     /**
      * @var PicturePrefix 人脸图片名（比视机特有）
      */
-    public $PicturePrefix;
+    private $PicturePrefix;
 
     /**
      * @var int 人脸属性检测（抓拍机没有该选项） 0：关闭；1：开启
      */
-    public $FaceAttributeEnabled;
+    private $FaceAttributeEnabled;
 
     /**
      * @var int 活体检测（设备需要支持活体检测） 0：关闭；1：开启
      */
-    public $HumanDetection;
+    private $HumanDetection;
 
     /**
      * @var int 活体阈值（设备需要支持活体检测），HumanDetection为1时有效
      */
-    public $HumanThreshold;
+    private $HumanThreshold;
 
     /**
      * @var int 功能优先（门禁机特有） 0：速度优先；1：活体优先
      */
-    public $DetectionPriority;
+    private $DetectionPriority;
 
     /**
      * @var PictureCompression 图片压缩，仅带”压缩”配置的设备支持
      */
-    public $PictureCompression;
+    private $PictureCompression;
 
     /**
-     * @var TimeTable 布防时间段(支持2个时间段)
+     * @var TimeTable[] 布防时间段(支持2个时间段)
      */
-    public $TimeTable;
+    private $TimeTable;
+
+    /**
+     * @return int
+     */
+    public function getFaceEnabled(): int
+    {
+        return $this->FaceEnabled;
+    }
+
+    /**
+     * @param int $FaceEnabled
+     */
+    public function setFaceEnabled(int $FaceEnabled): void
+    {
+        $this->FaceEnabled = $FaceEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSensitivity(): int
+    {
+        return $this->Sensitivity;
+    }
+
+    /**
+     * @param int $Sensitivity
+     */
+    public function setSensitivity(int $Sensitivity): void
+    {
+        $this->Sensitivity = $Sensitivity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCaptureMode(): int
+    {
+        return $this->CaptureMode;
+    }
+
+    /**
+     * @param int $CaptureMode
+     */
+    public function setCaptureMode(int $CaptureMode): void
+    {
+        $this->CaptureMode = $CaptureMode;
+    }
+
+    /**
+     * @return CaptureModeParam
+     */
+    public function getCaptureModeParam(): CaptureModeParam
+    {
+        return $this->CaptureModeParam;
+    }
+
+    /**
+     * @param CaptureModeParam $CaptureModeParam
+     */
+    public function setCaptureModeParam(CaptureModeParam $CaptureModeParam): void
+    {
+        $this->CaptureModeParam = $CaptureModeParam;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxFaceSize(): int
+    {
+        return $this->MaxFaceSize;
+    }
+
+    /**
+     * @param int $MaxFaceSize
+     */
+    public function setMaxFaceSize(int $MaxFaceSize): void
+    {
+        $this->MaxFaceSize = $MaxFaceSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinFaceSize(): int
+    {
+        return $this->MinFaceSize;
+    }
+
+    /**
+     * @param int $MinFaceSize
+     */
+    public function setMinFaceSize(int $MinFaceSize): void
+    {
+        $this->MinFaceSize = $MinFaceSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFaceAreaSize(): int
+    {
+        return $this->FaceAreaSize;
+    }
+
+    /**
+     * @param int $FaceAreaSize
+     */
+    public function setFaceAreaSize(int $FaceAreaSize): void
+    {
+        $this->FaceAreaSize = $FaceAreaSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinFaceTempSize(): int
+    {
+        return $this->MinFaceTempSize;
+    }
+
+    /**
+     * @param int $MinFaceTempSize
+     */
+    public function setMinFaceTempSize(int $MinFaceTempSize): void
+    {
+        $this->MinFaceTempSize = $MinFaceTempSize;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSceneMode(): int
+    {
+        return $this->SceneMode;
+    }
+
+    /**
+     * @param int $SceneMode
+     */
+    public function setSceneMode(int $SceneMode): void
+    {
+        $this->SceneMode = $SceneMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFaceTrackEnabled(): int
+    {
+        return $this->FaceTrackEnabled;
+    }
+
+    /**
+     * @param int $FaceTrackEnabled
+     */
+    public function setFaceTrackEnabled(int $FaceTrackEnabled): void
+    {
+        $this->FaceTrackEnabled = $FaceTrackEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFTPUploadEnabled(): int
+    {
+        return $this->FTPUploadEnabled;
+    }
+
+    /**
+     * @param int $FTPUploadEnabled
+     */
+    public function setFTPUploadEnabled(int $FTPUploadEnabled): void
+    {
+        $this->FTPUploadEnabled = $FTPUploadEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrivateProtocol(): int
+    {
+        return $this->PrivateProtocol;
+    }
+
+    /**
+     * @param int $PrivateProtocol
+     */
+    public function setPrivateProtocol(int $PrivateProtocol): void
+    {
+        $this->PrivateProtocol = $PrivateProtocol;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPictureMode(): int
+    {
+        return $this->PictureMode;
+    }
+
+    /**
+     * @param int $PictureMode
+     */
+    public function setPictureMode(int $PictureMode): void
+    {
+        $this->PictureMode = $PictureMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFacePictureQuality(): int
+    {
+        return $this->FacePictureQuality;
+    }
+
+    /**
+     * @param int $FacePictureQuality
+     */
+    public function setFacePictureQuality(int $FacePictureQuality): void
+    {
+        $this->FacePictureQuality = $FacePictureQuality;
+    }
+
+    /**
+     * @return int
+     */
+    public function getScenePictureQuality(): int
+    {
+        return $this->ScenePictureQuality;
+    }
+
+    /**
+     * @param int $ScenePictureQuality
+     */
+    public function setScenePictureQuality(int $ScenePictureQuality): void
+    {
+        $this->ScenePictureQuality = $ScenePictureQuality;
+    }
+
+    /**
+     * @return PicturePrefix
+     */
+    public function getPicturePrefix(): PicturePrefix
+    {
+        return $this->PicturePrefix;
+    }
+
+    /**
+     * @param PicturePrefix $PicturePrefix
+     */
+    public function setPicturePrefix(PicturePrefix $PicturePrefix): void
+    {
+        $this->PicturePrefix = $PicturePrefix;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFaceAttributeEnabled(): int
+    {
+        return $this->FaceAttributeEnabled;
+    }
+
+    /**
+     * @param int $FaceAttributeEnabled
+     */
+    public function setFaceAttributeEnabled(int $FaceAttributeEnabled): void
+    {
+        $this->FaceAttributeEnabled = $FaceAttributeEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHumanDetection(): int
+    {
+        return $this->HumanDetection;
+    }
+
+    /**
+     * @param int $HumanDetection
+     */
+    public function setHumanDetection(int $HumanDetection): void
+    {
+        $this->HumanDetection = $HumanDetection;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHumanThreshold(): int
+    {
+        return $this->HumanThreshold;
+    }
+
+    /**
+     * @param int $HumanThreshold
+     */
+    public function setHumanThreshold(int $HumanThreshold): void
+    {
+        $this->HumanThreshold = $HumanThreshold;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDetectionPriority(): int
+    {
+        return $this->DetectionPriority;
+    }
+
+    /**
+     * @param int $DetectionPriority
+     */
+    public function setDetectionPriority(int $DetectionPriority): void
+    {
+        $this->DetectionPriority = $DetectionPriority;
+    }
+
+    /**
+     * @return PictureCompression
+     */
+    public function getPictureCompression(): PictureCompression
+    {
+        return $this->PictureCompression;
+    }
+
+    /**
+     * @param PictureCompression $PictureCompression
+     */
+    public function setPictureCompression(PictureCompression $PictureCompression): void
+    {
+        $this->PictureCompression = $PictureCompression;
+    }
+
+    /**
+     * @return TimeTable[]
+     */
+    public function getTimeTable(): array
+    {
+        return $this->TimeTable;
+    }
+
+    /**
+     * @param TimeTable[] $TimeTable
+     */
+    public function setTimeTable(array $TimeTable): void
+    {
+        $this->TimeTable = $TimeTable;
+    }
 
     public function deserialize($param)
     {

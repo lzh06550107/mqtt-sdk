@@ -8,6 +8,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -18,11 +19,15 @@ foreach (
 }
 
 use JuLongDeviceMqtt\Common\AsyncMqttClient;
+use JuLongDeviceMqtt\Common\DefaultLogger;
 use JuLongDeviceMqtt\ParamSetting\Models\GetHistoryRecordRequest;
 use JuLongDeviceMqtt\ParamSetting\AsyncParamSettingMqttClient;
+use Psr\Log\LogLevel;
 use Swoole\Coroutine;
 
-$asyncMqttClient = new AsyncMqttClient();
+$logger = new DefaultLogger(LogLevel::INFO);
+
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -41,18 +46,16 @@ $asyncMqttClient->setSwooleConfig([
 $paramSettingMqttClient = new AsyncParamSettingMqttClient($asyncMqttClient);
 
 $getHistoryRecordRequest = new GetHistoryRecordRequest();
-$getHistoryRecordRequest->ChannelNo = 0;
-$getHistoryRecordRequest->Type = 1;
-$getHistoryRecordRequest->BeginTime = "2020-11-10 00:00:00";
-$getHistoryRecordRequest->EndTime = "2022-11-12 23:59:59";
-$getHistoryRecordRequest->RideType = 1;
-$getHistoryRecordRequest->PersonIdentity = 0;
-
+$getHistoryRecordRequest->setChannelNo(0);
+$getHistoryRecordRequest->setType(1);
+$getHistoryRecordRequest->setBeginTime("2020-11-10 00:00:00");
+$getHistoryRecordRequest->setEndTime("2022-11-12 23:59:59");
+$getHistoryRecordRequest->setRideType(1);
+$getHistoryRecordRequest->setPersonIdentity(0);
 
 Coroutine\run(function () use($paramSettingMqttClient, $getHistoryRecordRequest) {
 //    while (true) {
-    $response = $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getHistoryRecordRequest, 1);
-    var_dump($response);
+    $paramSettingMqttClient->publish('fwSkNfgI4JKljlkM', $getHistoryRecordRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

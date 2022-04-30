@@ -22,7 +22,7 @@ class GetPictureByFileNameRequest extends AbstractRequest
     /**
      * @var string 图片路径
      */
-    public $PicturePath;
+    private $PicturePath;
 
     /**
      * 构造函数

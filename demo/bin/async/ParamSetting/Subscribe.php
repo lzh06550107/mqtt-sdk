@@ -9,6 +9,7 @@ foreach (
         __DIR__ . '/../vendor/autoload.php',
         __DIR__ . '/../../vendor/autoload.php',
         __DIR__ . '/../../../vendor/autoload.php',
+        __DIR__ . '/../../../../vendor/autoload.php',
         __DIR__ . '/../../../autoload.php',
     ] as $file
 ) {
@@ -29,7 +30,7 @@ Coroutine\run(function () {
 
     $logger = new DefaultLogger(LogLevel::INFO);
 
-    $asyncMqttClient = new AsyncMqttClient();
+    $asyncMqttClient = new AsyncMqttClient($logger);
 
     $asyncMqttClient->setBrokerHost('128.128.13.90');
     $asyncMqttClient->setBrokerPort(1883);

@@ -16,7 +16,23 @@ class BatchAddPersonResponse extends AbstractResponse
     /**
      * @var BatchAddPersonResponseInfo[] 批量添加返回响应信息
      */
-    public $PersonInfo;
+    private $PersonInfo;
+
+    /**
+     * @return BatchAddPersonResponseInfo[]
+     */
+    public function getPersonInfo(): array
+    {
+        return $this->PersonInfo;
+    }
+
+    /**
+     * @param BatchAddPersonResponseInfo[] $PersonInfo
+     */
+    public function setPersonInfo(array $PersonInfo): void
+    {
+        $this->PersonInfo = $PersonInfo;
+    }
 
     public function deserialize($param)
     {

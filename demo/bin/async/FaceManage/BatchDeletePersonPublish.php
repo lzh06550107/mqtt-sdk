@@ -28,7 +28,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -56,7 +56,7 @@ $batchDeletePersonRequest->setPersonInfo([$batchDeletePersonInfo]);
 // TaskID 字段值不能加下划线
 Coroutine\run(function () use ($faceManageBaseMqttClient, $batchDeletePersonRequest) {
 //    while (true) {
-    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest);
+    $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $batchDeletePersonRequest, MQTT_QOS_0);
     Coroutine::sleep(3);
 //    }
 });

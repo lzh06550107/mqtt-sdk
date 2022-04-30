@@ -321,10 +321,10 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             $this->repository->addPendingOutgoingMessage($pendingMessage);
         }
 
-        print_r('---------发送消息内容----------' . PHP_EOL);
-        print_r($message);
-        print_r(PHP_EOL);
-        file_put_contents("test.json", $message);
+//        print_r('---------发送消息内容----------' . PHP_EOL);
+//        print_r($message);
+//        print_r(PHP_EOL);
+//        file_put_contents("test.json", $message);
 
         $this->publishMessage($uuidOrTopic, $message, $qualityOfService, $retain, $messageId);
     }
@@ -762,6 +762,7 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
             try {
                 call_user_func($subscriber->getCallback(), $topic, $responseObj, $retained);
             } catch (\Throwable $e) {
+                print_r($e);
                 $this->logger->error('Subscriber callback threw exception for published message on topic [{topic}].', [
                     'topic' => $topic,
                     'message' => $responseObj,
@@ -947,18 +948,35 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
         // 反射对应的类
         // 获取到对应的控制器
         $reflectionClassObj =  null;
-        foreach (['FaceManage', 'ParamSetting', 'DataStream'] as $service) {
+        $notFind = false;
+        foreach (['FaceManage', 'ParamSetting', 'DataStream'] as $key => $service) {
             try {
                 $respClass = "JuLongDeviceMqtt"."\\".ucfirst($service)."\\"."Models"."\\".ucfirst($action)."Response";
+                print_r("---------反射类路径1----{$key}-----" . PHP_EOL);
+                print_r($respClass . PHP_EOL);
                 $reflectionClassObj = new ReflectionClass($respClass); // 第一个参数对象
-                break;
             } catch (ReflectionException $e) {
-                // 路径错误
+                try {
+                    $respClass = "JuLongDeviceMqtt"."\\".ucfirst($service)."\\"."Models"."\\".ucfirst($action);
+                    print_r("---------反射类路径2----{$key}-----" . PHP_EOL);
+                    print_r($respClass . PHP_EOL);
+                    $reflectionClassObj = new ReflectionClass($respClass); // 第一个参数对象
+                } catch (ReflectionException $e) {
+                    if ($key == 2) {
+                        print_r('---------没有找到-----------' . PHP_EOL);
+                        $notFind = true;
+                    }
+                }
             }
+
+            if ($reflectionClassObj) {
+                break;
+            }
+
         }
 
-        if (!$reflectionClassObj) {
-            throw new ReflectionException('找不到该类');
+        if ($notFind && !$reflectionClassObj) {
+            throw new ReflectionException('没有找到对应响应类');
         }
 
         /**
@@ -970,6 +988,4 @@ abstract class AbstractMqttClient extends ClientConfig implements MqttClient
         return $responseObj;
 
     }
-
-
 }

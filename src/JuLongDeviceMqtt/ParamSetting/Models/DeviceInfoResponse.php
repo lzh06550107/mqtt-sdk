@@ -21,7 +21,23 @@ class DeviceInfoResponse extends AbstractResponse
     /**
      * @var DeviceInfo 设备查询的信息
      */
-    public $DeviceInfo;
+    private $DeviceInfo;
+
+    /**
+     * @return DeviceInfo
+     */
+    public function getDeviceInfo(): DeviceInfo
+    {
+        return $this->DeviceInfo;
+    }
+
+    /**
+     * @param DeviceInfo $DeviceInfo
+     */
+    public function setDeviceInfo(DeviceInfo $DeviceInfo): void
+    {
+        $this->DeviceInfo = $DeviceInfo;
+    }
 
     public function deserialize($param) {
 

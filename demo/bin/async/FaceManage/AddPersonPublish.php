@@ -29,7 +29,7 @@ use Swoole\Coroutine;
 
 $logger = new DefaultLogger(LogLevel::INFO);
 
-$asyncMqttClient = new AsyncMqttClient(null, $logger);
+$asyncMqttClient = new AsyncMqttClient($logger);
 
 $asyncMqttClient->setBrokerHost('128.128.13.90');
 $asyncMqttClient->setBrokerPort(1883);
@@ -84,7 +84,7 @@ $addPersonRequest->setPersonInfo($personInfo);
 // 测试成功
 Coroutine\run(function () use($faceManageBaseMqttClient, $addPersonRequest) {
 //    while (true) {
-        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $addPersonRequest, 1);
+        $faceManageBaseMqttClient->publish('fwSkNfgI4JKljlkM', $addPersonRequest, MQTT_QOS_0);
         Coroutine::sleep(3);
 //    }
 });

@@ -17,7 +17,7 @@ use JuLongDeviceMqtt\ParamSetting\ParamSettingAction;
  * Created on 2022/2/14 16:52
  * Create by LZH
  *
- * @property NetCfg $NetCfg 网络参数配置
+ * @method setNetCfg(NetCfg $NetCfg) 网络参数配置
  */
 class SetNetCfgRequest extends AbstractRequest {
 
@@ -26,7 +26,7 @@ class SetNetCfgRequest extends AbstractRequest {
      */
     public function __construct()
     {
-        $this->Action = ParamSettingAction::SET_NET_CFG; // 初始化动作名称
+        $this->setAction(ParamSettingAction::SET_NET_CFG); // 初始化动作名称
     }
 
     // 给一个未定义的属性赋值时调用
